@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Onix.Writebook.Sistema.Infra.Data.Context;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Onix.Writebook.Sistema.Infra.Data.Context;
 
 #nullable disable
 
 namespace Onix.Writebook.Sistema.Infra.Data.Migrations
 {
     [DbContext(typeof(SistemaDbContext))]
-    [Migration("20251226202900_CreateSistema")]
+    [Migration("20260110032517_CreateSistema")]
     partial class CreateSistema
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Onix.Writebook.Sistema.Infra.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.22")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
