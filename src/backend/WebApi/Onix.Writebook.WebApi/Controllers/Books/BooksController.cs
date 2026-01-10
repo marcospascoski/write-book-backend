@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Onix.Framework.Domain.Interfaces;
 using Onix.Framework.Notifications.Interfaces;
 using Onix.Framework.WebApi.Controllers;
-using Onix.Writebook.Books.Application.Reports.Interfaces;
-using Onix.Writebook.Books.Application.Reports.ViewModels;
+using Onix.Writebook.Books.Application.Interfaces;
+using Onix.Writebook.Books.Application.ViewModels;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Onix.Writebook.WebApi.Controllers.Books;
 
@@ -18,9 +20,9 @@ public class BooksController(
     private readonly IBookAppService _bookPdfReportService = bookPdfReportService;
 
     [HttpPost, Route("exportar/pdf")]
-    public IActionResult ExportBookPdf(ExportBookPdfViewModel model)
+    public async Task<IActionResult> ExportBookPdf([FromBody] BookReportViewModel model, CancellationToken cancellationToken)
     {
-        var pdfBytes = _bookPdfReportService.Export(model);
+        var pdfBytes = await _bookPdfReportService.ExportAsync(model, cancellationToken);
 
         var fileName = string.IsNullOrWhiteSpace(model.Title)
             ? "book.pdf"

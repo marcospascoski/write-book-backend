@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace Nexus.Power.Acesso.Infra.Data.Migrations.Data
+namespace Onix.Writebook.Acesso.Infra.Data.Migrations.Data
 {
     internal static class CreateAcessoData
     {

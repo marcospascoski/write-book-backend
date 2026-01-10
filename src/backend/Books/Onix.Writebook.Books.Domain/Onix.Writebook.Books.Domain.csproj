@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Core\Onix.Writebook.Core.Domain\Onix.Writebook.Core.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\Onix.Writebook.Core.Resources\Onix.Writebook.Core.Resources.csproj" />
   </ItemGroup>
 
 </Project>

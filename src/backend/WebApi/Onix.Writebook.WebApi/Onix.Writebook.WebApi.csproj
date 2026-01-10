@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.Security\Onix.Framework.Security.csproj" />
     <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.WebApi\Onix.Framework.WebApi.csproj" />
+    <ProjectReference Include="..\..\Books\Onix.Writebook.Books.Infra.IoC\Onix.Writebook.Books.Infra.IoC.csproj" />
     
     <!-- Core -->
     <ProjectReference Include="..\..\Core\Onix.Writebook.Core.Infra.IoC\Onix.Writebook.Core.Infra.IoC.csproj" />

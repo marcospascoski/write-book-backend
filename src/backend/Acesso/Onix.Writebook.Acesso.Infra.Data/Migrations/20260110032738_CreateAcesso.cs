@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Nexus.Power.Acesso.Infra.Data.Migrations.Data;
+using Onix.Writebook.Acesso.Infra.Data.Migrations.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using System;
 

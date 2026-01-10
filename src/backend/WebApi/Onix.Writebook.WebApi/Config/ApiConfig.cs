@@ -7,8 +7,8 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
-using Onix.Writebook.Books.Application.Reports.Interfaces;
-using Onix.Writebook.Books.Application.Reports.Services;
+using Onix.Writebook.Books.Application.Interfaces;
+using Onix.Writebook.Books.Application.Services;
 
 namespace Onix.Writebook.WebApi.Config
 {
@@ -22,6 +22,7 @@ namespace Onix.Writebook.WebApi.Config
 
             // New Modules
             Acesso.Infra.IoC.NativeInjectorBootStrapper.AddConfiguration(services);
+            Books.Infra.IoC.NativeInjectorBootStrapper.AddConfiguration(services);
 
             // Books (no DB) - Reports
             services.AddScoped<IBookAppService, BookAppService>();

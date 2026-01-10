@@ -8,6 +8,7 @@ namespace Onix.Writebook.WebApi.Config
         {
             Sistema.Infra.IoC.NativeInjectorBootStrapper.AddDbContext(services, connectionString);
             Acesso.Infra.IoC.NativeInjectorBootStrapper.AddDbContext(services, connectionString);
+            Books.Infra.IoC.NativeInjectorBootStrapper.AddDbContext(services, connectionString);
 
             return services;
         }

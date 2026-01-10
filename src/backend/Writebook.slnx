@@ -9,6 +9,8 @@
   <Folder Name="/Books/">
     <Project Path="Books/Onix.Writebook.Books.Application/Onix.Writebook.Books.Application.csproj" Id="6b3b58b2-aac9-41d2-ab1e-b38e918e6fa4" />
     <Project Path="Books/Onix.Writebook.Books.Domain/Onix.Writebook.Books.Domain.csproj" />
+    <Project Path="Books/Onix.Writebook.Books.Infra.Data/Onix.Writebook.Books.Infra.Data.csproj" Id="45c126c4-f00d-446a-b4f5-b853586d3493" />
+    <Project Path="Books/Onix.Writebook.Books.Infra.IoC/Onix.Writebook.Books.Infra.IoC.csproj" />
     <Project Path="Books/Onix.Writebook.Books.Tests/Onix.Writebook.Books.Tests.csproj" />
   </Folder>
   <Folder Name="/Core/">

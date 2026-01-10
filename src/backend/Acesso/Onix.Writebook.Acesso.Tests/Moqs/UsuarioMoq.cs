@@ -56,8 +56,8 @@ namespace Onix.Writebook.Acesso.Tests.Moqs
 
         public static Usuario GetUsuarioAtivo(
             Guid? id = null,
-            string nome = null,
-            string email = null)
+            string nome = NotProvided,
+            string email = NotProvided)
         {
             return GetUsuario(
                 id: id,
@@ -69,8 +69,8 @@ namespace Onix.Writebook.Acesso.Tests.Moqs
 
         public static Usuario GetUsuarioBloqueado(
             Guid? id = null,
-            string nome = null,
-            string email = null)
+            string nome = NotProvided,
+            string email = NotProvided)
         {
             return GetUsuario(
                 id: id,
@@ -82,8 +82,8 @@ namespace Onix.Writebook.Acesso.Tests.Moqs
 
         public static Usuario GetUsuarioInativo(
             Guid? id = null,
-            string nome = null,
-            string email = null)
+            string nome = NotProvided,
+            string email = NotProvided)
         {
             return GetUsuario(
                 id: id,

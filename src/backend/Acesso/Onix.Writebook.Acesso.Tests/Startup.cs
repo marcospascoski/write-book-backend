@@ -10,7 +10,7 @@ namespace Onix.Writebook.Acesso.Tests
 {
     public class Startup
     {
-        public void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(IServiceCollection services)
         {
             // Core registrations (Localization, NotificationContext)
             Onix.Writebook.Core.Infra.IoC.NativeInjectorBootStrapper.AddConfiguration(services);

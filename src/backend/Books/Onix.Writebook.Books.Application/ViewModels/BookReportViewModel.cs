@@ -1,4 +1,4 @@
-namespace Onix.Writebook.Books.Application.Reports.ViewModels;
+namespace Onix.Writebook.Books.Application.ViewModels;
 
 public class BookReportViewModel
 {

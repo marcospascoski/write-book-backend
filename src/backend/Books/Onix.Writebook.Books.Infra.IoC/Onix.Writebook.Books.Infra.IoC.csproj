@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Onix.Writebook.Books.Application\Onix.Writebook.Books.Application.csproj" />
+    <ProjectReference Include="..\Onix.Writebook.Books.Infra.Data\Onix.Writebook.Books.Infra.Data.csproj" />
+  </ItemGroup>
+
+</Project>
