@@ -1,5 +1,11 @@
 <Solution>
-  <Folder Name="/Acesso/" />
+  <Folder Name="/Acesso/">
+    <Project Path="Acesso/Onix.Writebook.Acesso.Application/Onix.Writebook.Acesso.Application.csproj" />
+    <Project Path="Acesso/Onix.Writebook.Acesso.Domain/Onix.Writebook.Acesso.Domain.csproj" />
+    <Project Path="Acesso/Onix.Writebook.Acesso.Infra.Data/Onix.Writebook.Acesso.Infra.Data.csproj" />
+    <Project Path="Acesso/Onix.Writebook.Acesso.Infra.IoC/Onix.Writebook.Acesso.Infra.IoC.csproj" />
+    <Project Path="Acesso/Onix.Writebook.Acesso.Tests/Onix.Writebook.Acesso.Tests.csproj" />
+  </Folder>
   <Folder Name="/Core/">
     <Project Path="Core/Onix.Writebook.Core.Application/Onix.Writebook.Core.Application.csproj" />
     <Project Path="Core/Onix.Writebook.Core.Domain/Onix.Writebook.Core.Domain.csproj" />
@@ -7,7 +13,12 @@
     <Project Path="Core/Onix.Writebook.Core.Resources/Onix.Writebook.Core.Resources.csproj" Id="ce619a91-bfa3-4748-9c75-57e9a2a6dee2" />
     <Project Path="Core/Onix.Writebook.Core.Test/Onix.Writebook.Core.Tests.csproj" />
   </Folder>
-  <Folder Name="/Sistema/" />
+  <Folder Name="/Sistema/">
+    <Project Path="Sistema/Onix.Writebook.Sistema.Domain/Onix.Writebook.Sistema.Domain.csproj" />
+    <Project Path="Sistema/Onix.Writebook.Sistema.Infra.Data/Onix.Writebook.Sistema.Infra.Data.csproj" />
+    <Project Path="Sistema/Onix.Writebook.Sistema.Infra.IoC/Onix.Writebook.Sistema.Infra.IoC.csproj" />
+    <Project Path="Sistema/Onix.Writebook.Sistema.Test/Onix.Writebook.Sistema.Test.csproj" />
+  </Folder>
   <Folder Name="/_Onix.Framework/">
     <Project Path="../../Onix.Framework/src/Onix.Framework.Domain/Onix.Framework.Domain.csproj" />
     <Project Path="../../Onix.Framework/src/Onix.Framework.Infra.Data.EFCore/Onix.Framework.Infra.Data.EFCore.csproj" />

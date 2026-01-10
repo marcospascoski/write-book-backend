@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+	<PackageReference Include="AutoMapper" Version="13.0.1" />
+	<PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.Shared\Onix.Framework.Shared.csproj" />
+    <ProjectReference Include="..\..\Core\Onix.Writebook.Core.Resources\Onix.Writebook.Core.Resources.csproj" />
+    <ProjectReference Include="..\Onix.Writebook.Acesso.Domain\Onix.Writebook.Acesso.Domain.csproj" />
+  </ItemGroup>
+</Project>

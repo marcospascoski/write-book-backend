@@ -1,0 +1,512 @@
+{
+  "info": {
+    "name": "Onix Writebook - Autenticação e Permissões",
+    "description": "Collection para testar autenticação, login, logout, perfis e permissões",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Autenticação",
+      "item": [
+        {
+          "name": "Registrar Usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"userId\", jsonData.id || jsonData);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Usuario Teste\",\n  \"email\": \"teste@exemplo.com\",\n  \"password\": \"senha123\",\n  \"referralCode\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                  "    pm.environment.set(\"userId\", jsonData.id);",
+                  "    console.log(\"Token: \" + jsonData.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"teste@exemplo.com\",\n  \"senha\": \"senha123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Senha Invalida",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"teste@exemplo.com\",\n  \"senha\": \"senhaErrada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Email Inexistente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"naoexiste@exemplo.com\",\n  \"senha\": \"senha123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Perfis",
+      "item": [
+        {
+          "name": "Criar Perfil",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"perfilId\", jsonData.id || jsonData);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Administrador\",\n  \"descricao\": \"Perfil de administrador do sistema\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/perfil",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Listar Perfis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/perfil?pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "perfil"],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar Perfil por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/perfil/{{perfilId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "perfil", "{{perfilId}}"]
+            }
+          }
+        },
+        {
+          "name": "Alterar Perfil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{perfilId}},\n  \"nome\": \"Administrador Sistema\",\n  \"descricao\": \"Perfil de administrador do sistema com acesso total\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/perfil/{{perfilId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "perfil", "{{perfilId}}"]
+            }
+          }
+        },
+        {
+          "name": "Alterar Status Perfil - Inativar",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{perfilId}},\n  \"status\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/perfil/{{perfilId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "perfil", "{{perfilId}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Alterar Status Perfil - Ativar",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{perfilId}},\n  \"status\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/perfil/{{perfilId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "perfil", "{{perfilId}}", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Permissões",
+      "item": [
+        {
+          "name": "Criar Permissao",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"permissaoId\", jsonData.id || jsonData);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Criar Usuario\",\n  \"codigo\": \"usuario.criar\",\n  \"descricao\": \"Permissão para criar novos usuários\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/permissao",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "permissao"]
+            }
+          }
+        },
+        {
+          "name": "Listar Permissoes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/permissao?pageNumber=1&pageSize=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "permissao"],
+              "query": [
+                {
+                  "key": "pageNumber",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Buscar Permissao por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/permissao/{{permissaoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "permissao", "{{permissaoId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Perfil-Permissao",
+      "item": [
+        {
+          "name": "Vincular Permissao a Perfil",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"perfilPermissaoId\", jsonData.id || jsonData);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"perfilId\": {{perfilId}},\n  \"permissaoId\": {{permissaoId}}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/perfil-permissao",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "perfil-permissao"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Perfil-Permissao por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/perfil-permissao/{{perfilPermissaoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "perfil-permissao", "{{perfilPermissaoId}}"]
+            }
+          }
+        },
+        {
+          "name": "Remover Permissao de Perfil",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/perfil-permissao/{{perfilPermissaoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "perfil-permissao", "{{perfilPermissaoId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuario",
+      "item": [
+        {
+          "name": "Obter Usuario Atual",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuario/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "usuario", "me"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Usuario por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuario/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "usuario", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Alterar Dados Usuario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{userId}}\",\n  \"nome\": \"Usuario Teste Atualizado\",\n  \"email\": \"teste@exemplo.com\",\n  \"telefone\": \"11999999999\",\n  \"avatarUrl\": \"\",\n  \"pixKey\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuario/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "usuario", "{{userId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:5001",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "perfilId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "permissaoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "perfilPermissaoId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

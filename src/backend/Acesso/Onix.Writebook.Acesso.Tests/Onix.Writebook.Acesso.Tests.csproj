@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="xunit" Version="2.7.0" />
+    <PackageReference Include="Xunit.DependencyInjection" Version="8.9.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.Infra.Data\Onix.Framework.Infra.Data.csproj" />
+    <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.Notifications\Onix.Framework.Notifications.csproj" />
+    <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.Tests\Onix.Framework.Tests.csproj" />
+    <ProjectReference Include="..\..\Core\Onix.Writebook.Core.Infra.IoC\Onix.Writebook.Core.Infra.IoC.csproj" />
+    <ProjectReference Include="..\Onix.Writebook.Acesso.Application\Onix.Writebook.Acesso.Application.csproj" />
+    <ProjectReference Include="..\Onix.Writebook.Acesso.Domain\Onix.Writebook.Acesso.Domain.csproj" />
+    <ProjectReference Include="..\Onix.Writebook.Acesso.Infra.Data\Onix.Writebook.Acesso.Infra.Data.csproj" />
+    <ProjectReference Include="..\Onix.Writebook.Acesso.Infra.IoC\Onix.Writebook.Acesso.Infra.IoC.csproj" />
+  </ItemGroup>
+</Project>
