@@ -1,6 +1,21 @@
 <Solution>
   <Folder Name="/Acesso/" />
-  <Folder Name="/Core/" />
+  <Folder Name="/Core/">
+    <Project Path="Core/Onix.Writebook.Core.Application/Onix.Writebook.Core.Application.csproj" />
+    <Project Path="Core/Onix.Writebook.Core.Domain/Onix.Writebook.Core.Domain.csproj" />
+    <Project Path="Core/Onix.Writebook.Core.Infra.IoC/Onix.Writebook.Core.Infra.IoC.csproj" />
+    <Project Path="Core/Onix.Writebook.Core.Resources/Onix.Writebook.Core.Resources.csproj" Id="ce619a91-bfa3-4748-9c75-57e9a2a6dee2" />
+    <Project Path="Core/Onix.Writebook.Core.Test/Onix.Writebook.Core.Tests.csproj" />
+  </Folder>
   <Folder Name="/Sistema/" />
-  <Folder Name="/_Onix.Framework/" />
+  <Folder Name="/_Onix.Framework/">
+    <Project Path="../../Onix.Framework/src/Onix.Framework.Domain/Onix.Framework.Domain.csproj" />
+    <Project Path="../../Onix.Framework/src/Onix.Framework.Infra.Data.EFCore/Onix.Framework.Infra.Data.EFCore.csproj" />
+    <Project Path="../../Onix.Framework/src/Onix.Framework.Infra.Data/Onix.Framework.Infra.Data.csproj" />
+    <Project Path="../../Onix.Framework/src/Onix.Framework.Notifications/Onix.Framework.Notifications.csproj" />
+    <Project Path="../../Onix.Framework/src/Onix.Framework.Security/Onix.Framework.Security.csproj" />
+    <Project Path="../../Onix.Framework/src/Onix.Framework.Shared/Onix.Framework.Shared.csproj" />
+    <Project Path="../../Onix.Framework/src/Onix.Framework.Tests/Onix.Framework.Tests.csproj" />
+    <Project Path="../../Onix.Framework/src/Onix.Framework/Onix.Framework.csproj" />
+  </Folder>
 </Solution>

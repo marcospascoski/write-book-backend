@@ -1,0 +1,17 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using Onix.Writebook.Core.Infra.IoC;
+
+namespace Onix.Writebook.Core.Tests
+{
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // Dependencies Config
+            NativeInjectorBootStrapper.AddConfiguration(services);
+
+            // Configure localization to use the Resources folder
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+        }
+    }
+}
