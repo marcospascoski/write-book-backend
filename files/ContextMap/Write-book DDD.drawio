@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.9">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.3.0">
   <diagram id="luZ39e_FZ3P_3g697uAv" name="Page-1">
-    <mxGraphModel dx="1226" dy="1789" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1042" dy="1703" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -68,14 +68,32 @@
         <mxCell id="24EPJd_6A9i8d60vHmGn-38" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" value="Entidade" vertex="1">
           <mxGeometry height="40" width="100" x="10" y="-770" as="geometry" />
         </mxCell>
-        <mxCell id="24EPJd_6A9i8d60vHmGn-39" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" value="EStatusEntidade" vertex="1">
+        <mxCell id="24EPJd_6A9i8d60vHmGn-39" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" value="EStatusEntidade (Enum)" vertex="1">
           <mxGeometry height="40" width="112" x="136" y="-870" as="geometry" />
         </mxCell>
-        <mxCell id="4JWXh3yKetcErfWysLH3-48" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fillColor=#1ba1e2;strokeColor=#006EAF;fontColor=#ffffff;" value="Exemplo quem tem Id da outra Tabela&lt;br&gt;aponta a flecha.&lt;br&gt;&lt;br&gt;&amp;nbsp;Ex: Pessoa tem Usuario" vertex="1">
+        <mxCell id="4JWXh3yKetcErfWysLH3-48" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontStyle=1;fillColor=#1ba1e2;strokeColor=#006EAF;fontColor=#ffffff;" value="Exemplo quem tem Id da outra Tabela&lt;br&gt;aponta a flecha.&lt;br&gt;&lt;br&gt;&amp;nbsp;Ex: Livro tem Usuario" vertex="1">
           <mxGeometry height="80" width="265.5" x="124.5" y="-810" as="geometry" />
         </mxCell>
         <mxCell id="JsTUrPFFDIVnibIPsxqG-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;&lt;b&gt;Salt&lt;/b&gt;&lt;/span&gt;" vertex="1">
           <mxGeometry height="25" width="75" x="167" y="-960" as="geometry" />
+        </mxCell>
+        <mxCell id="Vh-IWVcPTgihI1JUzYWN-1" parent="1" style="verticalAlign=top;align=left;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" value="Books" vertex="1">
+          <mxGeometry height="220" width="381" x="414" y="-1150" as="geometry" />
+        </mxCell>
+        <mxCell id="Vh-IWVcPTgihI1JUzYWN-8" edge="1" parent="1" source="Vh-IWVcPTgihI1JUzYWN-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Vh-IWVcPTgihI1JUzYWN-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Vh-IWVcPTgihI1JUzYWN-10" edge="1" parent="1" source="Vh-IWVcPTgihI1JUzYWN-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Vh-IWVcPTgihI1JUzYWN-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Vh-IWVcPTgihI1JUzYWN-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;&lt;b&gt;Book&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="40" width="90" x="460" y="-1060" as="geometry" />
+        </mxCell>
+        <mxCell id="Vh-IWVcPTgihI1JUzYWN-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;&lt;b&gt;Usuario&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="40" width="90" x="640" y="-1060" as="geometry" />
+        </mxCell>
+        <mxCell id="Vh-IWVcPTgihI1JUzYWN-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;&lt;b&gt;ETypeBook&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="28" width="100" x="455" y="-980" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
