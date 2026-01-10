@@ -25,6 +25,7 @@
     <!-- Modules -->
     <ProjectReference Include="..\..\Acesso\Onix.Writebook.Acesso.Application\Onix.Writebook.Acesso.Application.csproj" />
     <ProjectReference Include="..\..\Acesso\Onix.Writebook.Acesso.Infra.IoC\Onix.Writebook.Acesso.Infra.IoC.csproj" />
+    <ProjectReference Include="..\..\Books\Onix.Writebook.Books.Application\Onix.Writebook.Books.Application.csproj" />
   </ItemGroup>	
 
 </Project>

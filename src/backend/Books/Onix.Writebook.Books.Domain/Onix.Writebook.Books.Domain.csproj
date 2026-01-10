@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Onix.Writebook.Core.Domain\Onix.Writebook.Core.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

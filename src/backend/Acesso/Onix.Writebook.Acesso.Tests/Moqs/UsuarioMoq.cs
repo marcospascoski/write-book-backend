@@ -9,21 +9,27 @@ namespace Onix.Writebook.Acesso.Tests.Moqs
 {
     public static class UsuarioMoq
     {
+        private const string NotProvided = "__NOT_PROVIDED__";
+
         public static Usuario GetUsuario(
             Guid? id = null,
-            string nome = null,
-            string email = null,
-            string senha = null,
+            string nome = NotProvided,
+            string email = NotProvided,
+            string senha = NotProvided,
             EStatusUsuario status = EStatusUsuario.PendenteConfirmacao
             )
         {
             var salt = new SaltValueObject();
-            var senhaValueObject = new SenhaValueObject(senha ?? "Senha@123", salt.Valor);
+            var senhaRaw = senha == NotProvided ? "Senha@123" : senha;
+            var senhaValueObject = new SenhaValueObject(senhaRaw, salt.Valor);
+
+            var nomeFinal = nome == NotProvided ? ValuesMoq.CreateString(20) : nome;
+            var emailFinal = email == NotProvided ? $"{ValuesMoq.CreateString(10)}@test.com" : email;
 
             return new Usuario(
                 id ?? Guid.NewGuid(),
-                nome ?? ValuesMoq.CreateString(20),
-                email ?? $"{ValuesMoq.CreateString(10)}@test.com",
+                nomeFinal,
+                emailFinal,
                 senhaValueObject,
                 salt,
                 status

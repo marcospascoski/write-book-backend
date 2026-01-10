@@ -6,6 +6,11 @@
     <Project Path="Acesso/Onix.Writebook.Acesso.Infra.IoC/Onix.Writebook.Acesso.Infra.IoC.csproj" />
     <Project Path="Acesso/Onix.Writebook.Acesso.Tests/Onix.Writebook.Acesso.Tests.csproj" />
   </Folder>
+  <Folder Name="/Books/">
+    <Project Path="Books/Onix.Writebook.Books.Application/Onix.Writebook.Books.Application.csproj" Id="6b3b58b2-aac9-41d2-ab1e-b38e918e6fa4" />
+    <Project Path="Books/Onix.Writebook.Books.Domain/Onix.Writebook.Books.Domain.csproj" />
+    <Project Path="Books/Onix.Writebook.Books.Tests/Onix.Writebook.Books.Tests.csproj" />
+  </Folder>
   <Folder Name="/Core/">
     <Project Path="Core/Onix.Writebook.Core.Application/Onix.Writebook.Core.Application.csproj" />
     <Project Path="Core/Onix.Writebook.Core.Domain/Onix.Writebook.Core.Domain.csproj" />

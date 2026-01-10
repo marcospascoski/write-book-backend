@@ -11,7 +11,7 @@ using Onix.Writebook.Acesso.Application.ViewModels.Perfil;
 
 namespace Onix.Writebook.WebApi.Controllers.Acesso
 {
-    [Route("api/acesso/perfis")]
+    [Route("api/perfis")]
     public class AcessoPerfilController(
         INotificationContext notificationContext,
         IExceptionProcessor exceptionProcessor,

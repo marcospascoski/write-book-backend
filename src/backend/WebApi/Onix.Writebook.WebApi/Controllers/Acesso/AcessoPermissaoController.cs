@@ -11,7 +11,7 @@ using Onix.Writebook.Acesso.Application.ViewModels.Permissao;
 
 namespace Onix.Writebook.WebApi.Controllers.Acesso
 {
-    [Route("api/acesso/permissoes")]
+    [Route("api/permissoes")]
     public class AcessoPermissaoController(
         INotificationContext notificationContext,
         IExceptionProcessor exceptionProcessor,

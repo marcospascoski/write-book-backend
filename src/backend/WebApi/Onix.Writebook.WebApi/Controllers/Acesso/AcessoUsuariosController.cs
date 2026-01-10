@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Onix.Writebook.WebApi.Controllers.Acesso
 {
-    [Route("api/acesso/usuario")]
+    [Route("api/usuario")]
     public class AcessoUsuariosController(
         INotificationContext notificationContext,
         IExceptionProcessor exceptionProcessor,
@@ -20,13 +20,13 @@ namespace Onix.Writebook.WebApi.Controllers.Acesso
         private readonly IUsuarioAppService _usuarioAppService = usuarioAppService;
 
         [HttpGet, Route("perfil")]
-        public async Task<IActionResult> PesquisarPerfil([FromQuery] Guid userId)
+        public async Task<IActionResult> PesquisarPerfil(Guid userId)
         {
             return await TryExecuteAsync(_usuarioAppService.PesquisarPorId(userId));
         }
 
         [HttpPut, Route("perfil")]
-        public async Task<IActionResult> AlterarPerfil([FromQuery] Guid userId, [FromBody] UsuarioViewModel model)
+        public async Task<IActionResult> AlterarPerfil(Guid userId, UsuarioViewModel model)
         {
             return await TryExecuteAsync(_usuarioAppService.AlterarPerfilAsync(userId, model));
         }

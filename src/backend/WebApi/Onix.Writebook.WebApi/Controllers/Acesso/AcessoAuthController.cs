@@ -10,7 +10,7 @@ using Onix.Writebook.Acesso.Application.ViewModels.Login;
 
 namespace Onix.Writebook.WebApi.Controllers.Acesso
 {
-    [Route("api/acesso/auth")]
+    [Route("api/auth")]
     public class AcessoAuthController(
         INotificationContext notificationContext,
         IExceptionProcessor exceptionProcessor,

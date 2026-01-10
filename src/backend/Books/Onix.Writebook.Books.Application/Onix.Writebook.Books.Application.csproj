@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Onix.Writebook.Books.Domain\Onix.Writebook.Books.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\Onix.Writebook.Core.Application\Onix.Writebook.Core.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="QuestPDF" Version="2024.3.2" />
+  </ItemGroup>
+
+</Project>
