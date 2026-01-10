@@ -1,0 +1,9 @@
+Comando Criar migrations - Rodar em Contexto Infra.Data:
+
+Add-Migration CreateSistema -Context SistemaDbContext -OutputDir Migrations
+Add-Migration CreateAcesso -Context AcessosDbContext -OutputDir Migrations
+
+Comando Criar Banco de Dados:
+
+Update-Database -Context SistemaDbContext 
+Update-Database -Context AcessosDbContext

@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.22" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>  
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.Security\Onix.Framework.Security.csproj" />
+    <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.WebApi\Onix.Framework.WebApi.csproj" />
+    
+    <!-- Core -->
+    <ProjectReference Include="..\..\Core\Onix.Writebook.Core.Infra.IoC\Onix.Writebook.Core.Infra.IoC.csproj" />
+    <ProjectReference Include="..\..\Sistema\Onix.Writebook.Sistema.Infra.IoC\Onix.Writebook.Sistema.Infra.IoC.csproj" />
+
+    <!-- Modules -->
+    <ProjectReference Include="..\..\Acesso\Onix.Writebook.Acesso.Application\Onix.Writebook.Acesso.Application.csproj" />
+    <ProjectReference Include="..\..\Acesso\Onix.Writebook.Acesso.Infra.IoC\Onix.Writebook.Acesso.Infra.IoC.csproj" />
+  </ItemGroup>	
+
+</Project>

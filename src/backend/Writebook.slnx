@@ -19,6 +19,9 @@
     <Project Path="Sistema/Onix.Writebook.Sistema.Infra.IoC/Onix.Writebook.Sistema.Infra.IoC.csproj" />
     <Project Path="Sistema/Onix.Writebook.Sistema.Test/Onix.Writebook.Sistema.Test.csproj" />
   </Folder>
+  <Folder Name="/WebApi/">
+    <Project Path="WebApi/Onix.Writebook.WebApi/Onix.Writebook.WebApi.csproj" />
+  </Folder>
   <Folder Name="/_Onix.Framework/">
     <Project Path="../../Onix.Framework/src/Onix.Framework.Domain/Onix.Framework.Domain.csproj" />
     <Project Path="../../Onix.Framework/src/Onix.Framework.Infra.Data.EFCore/Onix.Framework.Infra.Data.EFCore.csproj" />
@@ -27,6 +30,7 @@
     <Project Path="../../Onix.Framework/src/Onix.Framework.Security/Onix.Framework.Security.csproj" />
     <Project Path="../../Onix.Framework/src/Onix.Framework.Shared/Onix.Framework.Shared.csproj" />
     <Project Path="../../Onix.Framework/src/Onix.Framework.Tests/Onix.Framework.Tests.csproj" />
+    <Project Path="../../Onix.Framework/src/Onix.Framework.WebApi/Onix.Framework.WebApi.csproj" />
     <Project Path="../../Onix.Framework/src/Onix.Framework/Onix.Framework.csproj" />
   </Folder>
 </Solution>
