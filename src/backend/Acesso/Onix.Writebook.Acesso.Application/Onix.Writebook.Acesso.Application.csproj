@@ -8,6 +8,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.Shared\Onix.Framework.Shared.csproj" />
+    <ProjectReference Include="..\..\Core\Onix.Writebook.Core.Application\Onix.Writebook.Core.Application.csproj" />
     <ProjectReference Include="..\..\Core\Onix.Writebook.Core.Resources\Onix.Writebook.Core.Resources.csproj" />
     <ProjectReference Include="..\Onix.Writebook.Acesso.Domain\Onix.Writebook.Acesso.Domain.csproj" />
   </ItemGroup>

@@ -31,37 +31,43 @@ namespace Onix.Writebook.WebApi.Controllers.Acesso
             return await TryExecuteAsync(_usuarioAppService.AlterarPerfilAsync(userId, model));
         }
 
-        [HttpPost, Route("usuarios")]
+        [HttpPost]
         public async Task<IActionResult> CadastrarAsync(RegistrarUsuarioViewModel model)
         {
             return await TryExecuteAsync(_usuarioAppService.CadastrarAsync(model));
         }
 
-        [HttpPut, Route("usuarios")]
+        [HttpPut]
         public async Task<IActionResult> Alterar(UsuarioViewModel model)
         {
             return await TryExecuteNoResultAsync(_usuarioAppService.Alterar(model));
         }
 
-        [HttpGet, Route("usuarios/{id}")]
+        [HttpGet, Route("{id}")]
         public async Task<IActionResult> PesquisarPorId(Guid id)
         {
             return await TryExecuteAsync(_usuarioAppService.PesquisarPorId(id));
         }
 
-        [HttpPatch, Route("usuarios/status")]
+        [HttpPatch, Route("status")]
         public async Task<IActionResult> AlterarStatus(UsuarioAlterarStatusViewModel model)
         {
             return await TryExecuteNoResultAsync(_usuarioAppService.AlterarStatus(model));
         }
 
-        [HttpPost, Route("usuarios/paginar")]
+        [HttpPost, Route("paginar")]
         public async Task<IActionResult> Paginar(FiltroUsuarioViewModel model)
         {
             return await TryExecuteAsync(_usuarioAppService.Paginar(model));
         }
 
-        [HttpPatch, Route("usuarios/redefinir-senha")]
+        [HttpPost, Route("solicitar-redefinicao-senha")]
+        public async Task<IActionResult> SolicitarRedefinicaoSenha(SolicitarRedefinicaoSenhaViewModel model)
+        {
+            return await TryExecuteAsync(_usuarioAppService.SolicitarRedefinicaoSenhaAsync(model));
+        }
+
+        [HttpPatch, Route("redefinir-senha")]
         public async Task<IActionResult> RedefinirSenha(UsuarioRedefinirSenhaViewModel model)
         {
             return await TryExecuteNoResultAsync(_usuarioAppService.RedefinirSenhaAsync(model));

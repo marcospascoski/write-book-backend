@@ -34,10 +34,12 @@ namespace Onix.Writebook.Acesso.Infra.IoC
             services.AddScoped<IPerfilValidator, PerfilValidator>();
             services.AddScoped<IPermissaoValidator, PermissaoValidator>();
             services.AddScoped<IPerfilPermissaoValidator, PerfilPermissaoValidator>();
+            services.AddScoped<ITokenRedefinicaoSenhaValidator, TokenRedefinicaoSenhaValidator>();
 
 
             // Infra Data
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<ITokenRedefinicaoSenhaRepository, TokenRedefinicaoSenhaRepository>();
             services.AddScoped<IAcessosUnitOfWork, AcessosUnitOfWork>();
             services.AddScoped<IPerfilRepository, PerfilRepository>();
             services.AddScoped<IPermissaoRepository, PermissaoRepository>();

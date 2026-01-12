@@ -10,6 +10,7 @@
 	
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.Notifications\Onix.Framework.Notifications.csproj" />
+    <ProjectReference Include="..\Onix.Writebook.Core.Application\Onix.Writebook.Core.Application.csproj" />
     <ProjectReference Include="..\Onix.Writebook.Core.Domain\Onix.Writebook.Core.Domain.csproj" />
     <ProjectReference Include="..\Onix.Writebook.Core.Resources\Onix.Writebook.Core.Resources.csproj" />
   </ItemGroup>

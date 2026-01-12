@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Onix.Framework.Notifications.Implementation;
 using Onix.Framework.Notifications.Interfaces;
+using Onix.Writebook.Core.Application.Interfaces;
+using Onix.Writebook.Core.Application.Services;
 
 namespace Onix.Writebook.Core.Infra.IoC
 {
@@ -10,6 +12,7 @@ namespace Onix.Writebook.Core.Infra.IoC
         {
             services.AddLocalization();
             services.AddScoped<INotificationContext, NotificationContext>();
+            services.AddScoped<IEmailAppService, EmailAppService>();
         }
     }
 }

@@ -20,7 +20,8 @@ namespace Onix.Writebook.Acesso.Tests.Services
         IUsuarioRepository usuarioRepository,
         IUsuarioValidator usuarioValidator,
         IAcessosUnitOfWork acessosUnitOfWork,
-        IStringLocalizer<TextResource> stringLocalizer)
+        IStringLocalizer<TextResource> stringLocalizer,
+        ITokenRedefinicaoSenhaRepository tokenRedefinicaoSenhaRepository)
     {
         private readonly INotificationContext _notificationContext = notificationContext;
         private readonly IUsuarioAppService _usuarioService = usuarioService;
@@ -28,6 +29,7 @@ namespace Onix.Writebook.Acesso.Tests.Services
         private readonly IUsuarioValidator _usuarioValidator = usuarioValidator;
         private readonly IAcessosUnitOfWork _acessosUnitOfWork = acessosUnitOfWork;
         private readonly IStringLocalizer<TextResource> _stringLocalizer = stringLocalizer;
+        private readonly ITokenRedefinicaoSenhaRepository _tokenRedefinicaoSenhaRepository = tokenRedefinicaoSenhaRepository;
 
         [Fact]
         public async Task Deve_criar_usuario_com_sucesso()
@@ -193,35 +195,65 @@ namespace Onix.Writebook.Acesso.Tests.Services
         }
 
         [Fact]
-        public async Task Deve_redefinir_senha_usuario_com_sucesso()
+        public async Task Deve_solicitar_redefinicao_senha_com_sucesso()
+        {
+            var email = "usuario@test.com";
+            var usuario = await CadastrarUsuario(email: email);
+            _acessosUnitOfWork.Untrack<Usuario>(usuario);
+
+            var solicitarRedefinicaoViewModel = new Application.ViewModels.SolicitarRedefinicaoSenhaViewModel
+            {
+                Email = email
+            };
+
+            var resultado = await _usuarioService.SolicitarRedefinicaoSenhaAsync(solicitarRedefinicaoViewModel);
+
+            Assert.True(resultado);
+            Assert.False(_notificationContext.HasErrors);
+            
+            var token = await _tokenRedefinicaoSenhaRepository.PesquisarTokenValidoPorUsuarioAsync(usuario.Id);
+            Assert.NotNull(token);
+            Assert.True(token.EstaValido());
+        }
+
+        [Fact]
+        public async Task Deve_redefinir_senha_com_token_valido()
         {
             var senhaOriginal = "SenhaAntiga@123";
             var novaSenha = "NovaSenha@456";
-            var usuario = await CadastrarUsuario(senha: senhaOriginal);
-            var saltOriginal = usuario.Salt.Valor;
+            var email = "usuario@test.com";
+            var usuario = await CadastrarUsuario(email: email, senha: senhaOriginal);
+            
+            // Cria token de redefinição
+            var tokenRedefinicaoSenha = new TokenRedefinicaoSenha(usuario.Id);
+            await _tokenRedefinicaoSenhaRepository.Cadastrar(tokenRedefinicaoSenha);
+            await _acessosUnitOfWork.CommitAsync();
             _acessosUnitOfWork.Untrack<Usuario>(usuario);
+            _acessosUnitOfWork.Untrack<TokenRedefinicaoSenha>(tokenRedefinicaoSenha);
 
             var redefinirSenhaViewModel = new Application.ViewModels.UsuarioRedefinirSenhaViewModel
             {
-                Id = usuario.Id,
+                Token = tokenRedefinicaoSenha.Token,
                 NovaSenha = novaSenha
             };
 
             await _usuarioService.RedefinirSenhaAsync(redefinirSenhaViewModel);
 
-            var usuarioAtualizado = await _usuarioRepository.PesquisarPorIdAsync(usuario.Id);
-            Assert.NotNull(usuarioAtualizado);
-            Assert.NotEqual(saltOriginal, usuarioAtualizado.Salt.Valor);
             Assert.False(_notificationContext.HasErrors);
+            
+            var usuarioAutenticado = await _usuarioRepository.PesquisarPorEmailESenhaAsync(email, novaSenha);
+            Assert.NotNull(usuarioAutenticado);
+            
+            var tokenAtualizado = await _tokenRedefinicaoSenhaRepository.PesquisarPorTokenAsync(tokenRedefinicaoSenha.Token);
+            Assert.True(tokenAtualizado.Utilizado);
         }
 
         [Fact]
         public async Task Deve_retornar_erro_ao_redefinir_senha_usuario_inexistente()
         {
-            var usuarioId = Guid.NewGuid();
             var redefinirSenhaViewModel = new Application.ViewModels.UsuarioRedefinirSenhaViewModel
             {
-                Id = usuarioId,
+                Token = "token_inexistente",
                 NovaSenha = "NovaSenha@123"
             };
 
@@ -237,11 +269,17 @@ namespace Onix.Writebook.Acesso.Tests.Services
             var novaSenha = "NovaSenha@456";
             var email = "usuario@test.com";
             var usuario = await CadastrarUsuario(email: email, senha: senhaOriginal);
+            
+            // Cria token de redefinição
+            var tokenRedefinicaoSenha = new TokenRedefinicaoSenha(usuario.Id);
+            await _tokenRedefinicaoSenhaRepository.Cadastrar(tokenRedefinicaoSenha);
+            await _acessosUnitOfWork.CommitAsync();
             _acessosUnitOfWork.Untrack<Usuario>(usuario);
+            _acessosUnitOfWork.Untrack<TokenRedefinicaoSenha>(tokenRedefinicaoSenha);
 
             var redefinirSenhaViewModel = new Application.ViewModels.UsuarioRedefinirSenhaViewModel
             {
-                Id = usuario.Id,
+                Token = tokenRedefinicaoSenha.Token,
                 NovaSenha = novaSenha
             };
 
@@ -254,6 +292,127 @@ namespace Onix.Writebook.Acesso.Tests.Services
 
             var usuarioComSenhaAntiga = await _usuarioRepository.PesquisarPorEmailESenhaAsync(email, senhaOriginal);
             Assert.Null(usuarioComSenhaAntiga);
+        }
+
+        [Fact]
+        public async Task Deve_retornar_erro_ao_redefinir_senha_com_token_invalido()
+        {
+            var redefinirSenhaViewModel = new Application.ViewModels.UsuarioRedefinirSenhaViewModel
+            {
+                Token = "token_inexistente",
+                NovaSenha = "NovaSenha@123"
+            };
+
+            await _usuarioService.RedefinirSenhaAsync(redefinirSenhaViewModel);
+
+            Assert.True(_notificationContext.HasErrors);
+        }
+
+        [Fact]
+        public async Task Deve_retornar_erro_ao_redefinir_senha_com_token_expirado()
+        {
+            var usuario = await CadastrarUsuario();
+            
+            // Cria token com data de expiração no passado
+            var tokenRedefinicaoSenha = new TokenRedefinicaoSenha(usuario.Id, horasExpiracao: -1);
+            await _tokenRedefinicaoSenhaRepository.Cadastrar(tokenRedefinicaoSenha);
+            await _acessosUnitOfWork.CommitAsync();
+            _acessosUnitOfWork.Untrack<Usuario>(usuario);
+            _acessosUnitOfWork.Untrack<TokenRedefinicaoSenha>(tokenRedefinicaoSenha);
+
+            var redefinirSenhaViewModel = new Application.ViewModels.UsuarioRedefinirSenhaViewModel
+            {
+                Token = tokenRedefinicaoSenha.Token,
+                NovaSenha = "NovaSenha@123"
+            };
+
+            await _usuarioService.RedefinirSenhaAsync(redefinirSenhaViewModel);
+
+            Assert.True(_notificationContext.HasErrors);
+        }
+
+        [Fact]
+        public async Task Deve_retornar_erro_ao_redefinir_senha_com_token_ja_utilizado()
+        {
+            var usuario = await CadastrarUsuario();
+            
+            // Cria token e marca como utilizado
+            var tokenRedefinicaoSenha = new TokenRedefinicaoSenha(usuario.Id);
+            tokenRedefinicaoSenha.MarcarComoUtilizado();
+            await _tokenRedefinicaoSenhaRepository.Cadastrar(tokenRedefinicaoSenha);
+            await _acessosUnitOfWork.CommitAsync();
+            _acessosUnitOfWork.Untrack<Usuario>(usuario);
+            _acessosUnitOfWork.Untrack<TokenRedefinicaoSenha>(tokenRedefinicaoSenha);
+
+            var redefinirSenhaViewModel = new Application.ViewModels.UsuarioRedefinirSenhaViewModel
+            {
+                Token = tokenRedefinicaoSenha.Token,
+                NovaSenha = "NovaSenha@123"
+            };
+
+            await _usuarioService.RedefinirSenhaAsync(redefinirSenhaViewModel);
+
+            Assert.True(_notificationContext.HasErrors);
+        }
+
+        [Fact]
+        public async Task Deve_invalidar_tokens_antigos_ao_solicitar_nova_redefinicao()
+        {
+            var email = "usuario@test.com";
+            var usuario = await CadastrarUsuario(email: email);
+            
+            // Cria primeiro token
+            var primeiroToken = new TokenRedefinicaoSenha(usuario.Id);
+            await _tokenRedefinicaoSenhaRepository.Cadastrar(primeiroToken);
+            await _acessosUnitOfWork.CommitAsync();
+            _acessosUnitOfWork.Untrack<Usuario>(usuario);
+            _acessosUnitOfWork.Untrack<TokenRedefinicaoSenha>(primeiroToken);
+
+            // Solicita nova redefinição
+            var solicitarRedefinicaoViewModel = new Application.ViewModels.SolicitarRedefinicaoSenhaViewModel
+            {
+                Email = email
+            };
+
+            await _usuarioService.SolicitarRedefinicaoSenhaAsync(solicitarRedefinicaoViewModel);
+
+            // Verifica se o primeiro token foi invalidado
+            var primeiroTokenAtualizado = await _tokenRedefinicaoSenhaRepository.PesquisarPorTokenAsync(primeiroToken.Token);
+            Assert.True(primeiroTokenAtualizado.Utilizado);
+        }
+
+        [Fact]
+        public async Task Deve_enviar_email_confirmacao_apos_cadastro()
+        {
+            var viewModel = RegistrarUsuarioViewModelMoq.GetUsuarioViewModel();
+
+            var usuarioId = await _usuarioService.CadastrarAsync(viewModel);
+
+            Assert.NotEqual(Guid.Empty, usuarioId);
+            Assert.False(_notificationContext.HasErrors);
+        }
+
+        [Fact]
+        public async Task Deve_enviar_email_confirmacao_para_usuario_existente()
+        {
+            var usuario = await CadastrarUsuario();
+            _acessosUnitOfWork.Untrack<Usuario>(usuario);
+
+            var resultado = await _usuarioService.EnviarEmailConfirmacaoAsync(usuario.Id);
+
+            Assert.True(resultado);
+            Assert.False(_notificationContext.HasErrors);
+        }
+
+        [Fact]
+        public async Task Deve_retornar_erro_ao_enviar_email_confirmacao_usuario_inexistente()
+        {
+            var usuarioId = Guid.NewGuid();
+
+            var resultado = await _usuarioService.EnviarEmailConfirmacaoAsync(usuarioId);
+
+            Assert.False(resultado);
+            Assert.True(_notificationContext.HasErrors);
         }
 
         private async Task<Usuario> CadastrarUsuario(

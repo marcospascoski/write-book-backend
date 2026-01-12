@@ -9,6 +9,8 @@ using Onix.Writebook.Acesso.Application.ViewModels.Registrar;
 using Onix.Writebook.Acesso.Domain.Entities;
 using Onix.Writebook.Acesso.Domain.Enums;
 using Onix.Writebook.Acesso.Domain.Interfaces;
+using Onix.Writebook.Core.Application.Interfaces;
+using Onix.Writebook.Core.Application.ViewModels;
 using Onix.Writebook.Core.Domain.Enums;
 using Onix.Writebook.Core.Resources;
 using System;
@@ -22,7 +24,10 @@ namespace Onix.Writebook.Acesso.Application.Services
         IUsuarioRepository usuarioRepository,
         IUsuarioValidator usuarioValidator,
         IMapper mapper,
-        IStringLocalizer<TextResource> stringLocalizer) : IUsuarioAppService
+        IStringLocalizer<TextResource> stringLocalizer,
+        IEmailAppService emailAppService,
+        ITokenRedefinicaoSenhaRepository tokenRedefinicaoSenhaRepository,
+        ITokenRedefinicaoSenhaValidator tokenRedefinicaoSenhaValidator) : IUsuarioAppService
     {
         private readonly INotificationContext _notificationContext = notificationContext;
         private readonly IAcessosUnitOfWork _acessosUnitOfWork = acessosUnitOfWork;
@@ -30,6 +35,9 @@ namespace Onix.Writebook.Acesso.Application.Services
         private readonly IUsuarioValidator _usuarioValidator = usuarioValidator;
         private readonly IMapper _mapper = mapper;
         private readonly IStringLocalizer<TextResource> _stringLocalizer = stringLocalizer;
+        private readonly IEmailAppService _emailAppService = emailAppService;
+        private readonly ITokenRedefinicaoSenhaRepository _tokenRedefinicaoSenhaRepository = tokenRedefinicaoSenhaRepository;
+        private readonly ITokenRedefinicaoSenhaValidator _tokenRedefinicaoSenhaValidator = tokenRedefinicaoSenhaValidator;
 
         public async Task<bool> CreditarRecompensa(Guid usuarioId, decimal valor)
         {
@@ -59,6 +67,9 @@ namespace Onix.Writebook.Acesso.Application.Services
                 await _usuarioRepository.Cadastrar(usuario);
                 await _acessosUnitOfWork.CommitAsync();
                 _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoCriarUsuario"));
+                
+                await EnviarEmailConfirmacaoAsync(usuario.Id);
+                
                 return usuario.Id;
             }
             return default;
@@ -159,7 +170,31 @@ namespace Onix.Writebook.Acesso.Application.Services
 
         public async Task RedefinirSenhaAsync(UsuarioRedefinirSenhaViewModel redefinirSenhaViewModel)
         {
-            var usuario = await _usuarioRepository.PesquisarPorIdAsync(redefinirSenhaViewModel.Id);
+            // Busca o token
+            var tokenRedefinicaoSenha = await _tokenRedefinicaoSenhaRepository.PesquisarPorTokenAsync(redefinirSenhaViewModel.Token);
+            
+            if (tokenRedefinicaoSenha == null)
+            {
+                _notificationContext.AddError("Token de redefinição de senha inválido");
+                return;
+            }
+
+            // Valida o token
+            if (!tokenRedefinicaoSenha.EstaValido())
+            {
+                if (tokenRedefinicaoSenha.EstaExpirado())
+                {
+                    _notificationContext.AddError("Token de redefinição de senha expirado. Solicite um novo token.");
+                }
+                else
+                {
+                    _notificationContext.AddError("Token de redefinição de senha já foi utilizado");
+                }
+                return;
+            }
+
+            // Busca o usuário
+            var usuario = await _usuarioRepository.PesquisarPorIdAsync(tokenRedefinicaoSenha.UsuarioId);
             if (usuario == null)
             {
                 var usuarioString = _stringLocalizer.GetString("Usuario");
@@ -167,14 +202,86 @@ namespace Onix.Writebook.Acesso.Application.Services
                 return;
             }
 
+            // Redefine a senha
             usuario.RedefinirSenha(redefinirSenhaViewModel.NovaSenha);
             
             if (await _usuarioValidator.IsValid(usuario))
             {
+                // Marca o token como utilizado
+                tokenRedefinicaoSenha.MarcarComoUtilizado();
+                _tokenRedefinicaoSenhaRepository.Alterar(tokenRedefinicaoSenha);
+                
+                // Atualiza o usuário
                 _usuarioRepository.Alterar(usuario);
                 await _acessosUnitOfWork.CommitAsync();
-                _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoAlterarDadosUsuario"));
+                _notificationContext.AddSuccess("Senha redefinida com sucesso");
             }
+        }
+
+        public async Task<bool> EnviarEmailConfirmacaoAsync(Guid usuarioId)
+        {
+            var usuario = await _usuarioRepository.PesquisarPorIdAsync(usuarioId);
+            if (usuario == null)
+            {
+                var usuarioString = _stringLocalizer.GetString("Usuario");
+                _notificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
+                return false;
+            }
+
+            var tokenConfirmacao = Guid.NewGuid().ToString();
+            var emailConfirmacaoViewModel = _mapper.Map<EmailConfirmacaoViewModel>(usuario, opts =>
+            {
+                opts.Items["TokenConfirmacao"] = tokenConfirmacao;
+            });
+            
+            var emailEnviado = await _emailAppService.EnviarEmailConfirmacaoAsync(emailConfirmacaoViewModel);
+
+            if (emailEnviado)
+            {
+                _notificationContext.AddSuccess("Email de confirmação enviado com sucesso");
+            }
+            else
+            {
+                _notificationContext.AddError("Erro ao enviar email de confirmação");
+            }
+
+            return emailEnviado;
+        }
+
+        public async Task<bool> SolicitarRedefinicaoSenhaAsync(SolicitarRedefinicaoSenhaViewModel model)
+        {
+            var usuario = await _usuarioRepository.PesquisarPorEmailAsync(model.Email);
+            if (usuario == null)
+            {
+                // Por segurança, não informamos se o email existe ou não
+                _notificationContext.AddSuccess("Se o email estiver cadastrado, você receberá instruções para redefinir sua senha");
+                return true;
+            }
+
+            await _tokenRedefinicaoSenhaRepository.InvalidarTokensAntigos(usuario.Id);
+            
+            var tokenRedefinicaoSenha = new TokenRedefinicaoSenha(usuario.Id);
+            if (await _tokenRedefinicaoSenhaValidator.IsValid(tokenRedefinicaoSenha))
+            {
+                await _tokenRedefinicaoSenhaRepository.Cadastrar(tokenRedefinicaoSenha);
+                await _acessosUnitOfWork.CommitAsync();
+                var emailRedefinicaoViewModel = _mapper.Map<EmailRedefinicaoSenhaViewModel>(usuario, opts =>
+                {
+                    opts.Items["TokenRedefinicao"] = tokenRedefinicaoSenha.Token;
+                });
+
+                var emailEnviado = await _emailAppService.EnviarEmailRedefinicaoSenhaAsync(emailRedefinicaoViewModel);
+                if (emailEnviado)
+                {
+                    _notificationContext.AddSuccess("Email de redefinição de senha enviado com sucesso");
+                }
+                else
+                {
+                    _notificationContext.AddError("Erro ao enviar email de redefinição de senha");
+                }
+                return emailEnviado;
+            }
+            return false;
         }
     }
 }
