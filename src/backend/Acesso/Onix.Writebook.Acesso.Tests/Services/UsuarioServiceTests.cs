@@ -14,29 +14,20 @@ using Onix.Writebook.Acesso.Domain.Enums;
 namespace Onix.Writebook.Acesso.Tests.Services
 {
     public class UsuarioServiceTests
+    (
+        INotificationContext notificationContext,
+        IUsuarioAppService usuarioService,
+        IUsuarioRepository usuarioRepository,
+        IUsuarioValidator usuarioValidator,
+        IAcessosUnitOfWork acessosUnitOfWork,
+        IStringLocalizer<TextResource> stringLocalizer)
     {
-        private readonly INotificationContext _notificationContext;
-        private readonly IUsuarioAppService _usuarioService;
-        private readonly IUsuarioRepository _usuarioRepository;
-        private readonly IUsuarioValidator _usuarioValidator;
-        private readonly IAcessosUnitOfWork _acessosUnitOfWork;
-        private readonly IStringLocalizer<TextResource> _stringLocalizer;
-
-        public UsuarioServiceTests(
-            INotificationContext notificationContext,
-            IUsuarioAppService usuarioService,
-            IUsuarioRepository usuarioRepository,
-            IUsuarioValidator usuarioValidator,
-            IAcessosUnitOfWork acessosUnitOfWork,
-            IStringLocalizer<TextResource> stringLocalizer)
-        {
-            _notificationContext = notificationContext;
-            _usuarioService = usuarioService;
-            _usuarioRepository = usuarioRepository;
-            _usuarioValidator = usuarioValidator;
-            _acessosUnitOfWork = acessosUnitOfWork;
-            _stringLocalizer = stringLocalizer;
-        }
+        private readonly INotificationContext _notificationContext = notificationContext;
+        private readonly IUsuarioAppService _usuarioService = usuarioService;
+        private readonly IUsuarioRepository _usuarioRepository = usuarioRepository;
+        private readonly IUsuarioValidator _usuarioValidator = usuarioValidator;
+        private readonly IAcessosUnitOfWork _acessosUnitOfWork = acessosUnitOfWork;
+        private readonly IStringLocalizer<TextResource> _stringLocalizer = stringLocalizer;
 
         [Fact]
         public async Task Deve_criar_usuario_com_sucesso()
@@ -47,6 +38,18 @@ namespace Onix.Writebook.Acesso.Tests.Services
 
             Assert.NotEqual(Guid.Empty, result);
             Assert.False(_notificationContext.HasErrors);
+        }
+
+        [Fact]
+        public async Task Deve_criar_usuario_com_status_pendente_confirmacao()
+        {
+            var viewModel = RegistrarUsuarioViewModelMoq.GetUsuarioViewModel();
+
+            var usuarioId = await _usuarioService.CadastrarAsync(viewModel);
+
+            var usuario = await _usuarioRepository.PesquisarPorIdAsync(usuarioId);
+            Assert.NotNull(usuario);
+            Assert.Equal(EStatusUsuario.PendenteConfirmacao, usuario.Status);
         }
 
         [Fact]

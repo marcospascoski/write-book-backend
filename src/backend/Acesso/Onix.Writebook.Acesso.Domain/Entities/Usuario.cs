@@ -77,7 +77,7 @@ namespace Onix.Writebook.Acesso.Domain.Entities
                     Email = prototype.Email,
                     Senha = senhaCriptografada,
                     Salt = salt,
-                    Status = EStatusUsuario.Inativo,
+                    Status = EStatusUsuario.PendenteConfirmacao,
                 };
             }
         }
