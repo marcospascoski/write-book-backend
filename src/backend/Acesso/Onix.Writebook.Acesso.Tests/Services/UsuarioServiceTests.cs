@@ -189,6 +189,70 @@ namespace Onix.Writebook.Acesso.Tests.Services
             Assert.True(existe);
         }
 
+        [Fact]
+        public async Task Deve_redefinir_senha_usuario_com_sucesso()
+        {
+            var senhaOriginal = "SenhaAntiga@123";
+            var novaSenha = "NovaSenha@456";
+            var usuario = await CadastrarUsuario(senha: senhaOriginal);
+            var saltOriginal = usuario.Salt.Valor;
+            _acessosUnitOfWork.Untrack<Usuario>(usuario);
+
+            var redefinirSenhaViewModel = new Application.ViewModels.UsuarioRedefinirSenhaViewModel
+            {
+                Id = usuario.Id,
+                NovaSenha = novaSenha
+            };
+
+            await _usuarioService.RedefinirSenhaAsync(redefinirSenhaViewModel);
+
+            var usuarioAtualizado = await _usuarioRepository.PesquisarPorIdAsync(usuario.Id);
+            Assert.NotNull(usuarioAtualizado);
+            Assert.NotEqual(saltOriginal, usuarioAtualizado.Salt.Valor);
+            Assert.False(_notificationContext.HasErrors);
+        }
+
+        [Fact]
+        public async Task Deve_retornar_erro_ao_redefinir_senha_usuario_inexistente()
+        {
+            var usuarioId = Guid.NewGuid();
+            var redefinirSenhaViewModel = new Application.ViewModels.UsuarioRedefinirSenhaViewModel
+            {
+                Id = usuarioId,
+                NovaSenha = "NovaSenha@123"
+            };
+
+            await _usuarioService.RedefinirSenhaAsync(redefinirSenhaViewModel);
+
+            Assert.True(_notificationContext.HasErrors);
+        }
+
+        [Fact]
+        public async Task Deve_autenticar_com_nova_senha_apos_redefinicao()
+        {
+            var senhaOriginal = "SenhaAntiga@123";
+            var novaSenha = "NovaSenha@456";
+            var email = "usuario@test.com";
+            var usuario = await CadastrarUsuario(email: email, senha: senhaOriginal);
+            _acessosUnitOfWork.Untrack<Usuario>(usuario);
+
+            var redefinirSenhaViewModel = new Application.ViewModels.UsuarioRedefinirSenhaViewModel
+            {
+                Id = usuario.Id,
+                NovaSenha = novaSenha
+            };
+
+            await _usuarioService.RedefinirSenhaAsync(redefinirSenhaViewModel);
+            _acessosUnitOfWork.Untrack<Usuario>(usuario);
+
+            var usuarioAutenticado = await _usuarioRepository.PesquisarPorEmailESenhaAsync(email, novaSenha);
+            Assert.NotNull(usuarioAutenticado);
+            Assert.Equal(email, usuarioAutenticado.Email);
+
+            var usuarioComSenhaAntiga = await _usuarioRepository.PesquisarPorEmailESenhaAsync(email, senhaOriginal);
+            Assert.Null(usuarioComSenhaAntiga);
+        }
+
         private async Task<Usuario> CadastrarUsuario(
             Guid? id = null,
             string nome = null,

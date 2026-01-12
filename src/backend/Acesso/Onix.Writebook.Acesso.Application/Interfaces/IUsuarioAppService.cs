@@ -16,5 +16,6 @@ namespace Onix.Writebook.Acesso.Application.Interfaces
         Task<bool> AlterarPerfilAsync(Guid usuarioId, UsuarioViewModel updates);
         Task AlterarStatus(UsuarioAlterarStatusViewModel alterarStatusViewModel);
         Task<IPagedItems<UsuarioViewModel>> Paginar(FiltroUsuarioViewModel model);
+        Task RedefinirSenhaAsync(UsuarioRedefinirSenhaViewModel redefinirSenhaViewModel);
     }
 }

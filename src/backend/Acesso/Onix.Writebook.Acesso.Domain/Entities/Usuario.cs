@@ -8,8 +8,8 @@ namespace Onix.Writebook.Acesso.Domain.Entities
     public class Usuario : AggregateRootEntity
     {
         public Guid Id { get; private set; }
-        //public long PerfilId { get; private set; } = 2;
-        //public virtual Perfil Perfil { get; private set; }
+        public long PerfilId { get; private set; } = 2;
+        public virtual Perfil Perfil { get; private set; }
         public string Nome { get; private set; }
         public string Email { get; private set; }        
         public SenhaValueObject Senha { get; private set; }
@@ -54,6 +54,13 @@ namespace Onix.Writebook.Acesso.Domain.Entities
             this.Status = status;
         }
 
+        public void RedefinirSenha(string novaSenha)
+        {
+            Salt = new SaltValueObject();
+            Senha = new SenhaValueObject(novaSenha, Salt.Valor);
+            Modificado = DateTime.UtcNow;
+        }
+
         public static class Factory
         {
             public static Usuario Create(Usuario prototype)
@@ -66,11 +73,11 @@ namespace Onix.Writebook.Acesso.Domain.Entities
 
                     Id = Guid.NewGuid(),
                     Nome = prototype.Nome,
-                    //Perfil = prototype.Perfil,
+                    Perfil = prototype.Perfil,
                     Email = prototype.Email,
                     Senha = senhaCriptografada,
                     Salt = salt,
-                    Status = EStatusUsuario.PendenteConfirmacao,
+                    Status = EStatusUsuario.Inativo,
                 };
             }
         }

@@ -156,5 +156,25 @@ namespace Onix.Writebook.Acesso.Application.Services
             _usuarioRepository.Alterar(usuario);
             return await _acessosUnitOfWork.CommitAsync() > 0;
         }
+
+        public async Task RedefinirSenhaAsync(UsuarioRedefinirSenhaViewModel redefinirSenhaViewModel)
+        {
+            var usuario = await _usuarioRepository.PesquisarPorIdAsync(redefinirSenhaViewModel.Id);
+            if (usuario == null)
+            {
+                var usuarioString = _stringLocalizer.GetString("Usuario");
+                _notificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
+                return;
+            }
+
+            usuario.RedefinirSenha(redefinirSenhaViewModel.NovaSenha);
+            
+            if (await _usuarioValidator.IsValid(usuario))
+            {
+                _usuarioRepository.Alterar(usuario);
+                await _acessosUnitOfWork.CommitAsync();
+                _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoAlterarDadosUsuario"));
+            }
+        }
     }
 }

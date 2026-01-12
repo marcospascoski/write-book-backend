@@ -59,6 +59,12 @@ namespace Onix.Writebook.WebApi.Controllers.Acesso
         public async Task<IActionResult> Paginar(FiltroUsuarioViewModel model)
         {
             return await TryExecuteAsync(_usuarioAppService.Paginar(model));
-        }        
+        }
+
+        [HttpPatch, Route("usuarios/redefinir-senha")]
+        public async Task<IActionResult> RedefinirSenha(UsuarioRedefinirSenhaViewModel model)
+        {
+            return await TryExecuteNoResultAsync(_usuarioAppService.RedefinirSenhaAsync(model));
+        }
     }
 }
