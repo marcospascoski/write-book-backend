@@ -175,7 +175,7 @@ namespace Onix.Writebook.Acesso.Application.Services
             
             if (tokenRedefinicaoSenha == null)
             {
-                _notificationContext.AddError("Token de redefinição de senha inválido");
+                _notificationContext.AddError(_stringLocalizer.GetString("ErroTokenRedefinicaoInvalido"));
                 return;
             }
 
@@ -184,11 +184,11 @@ namespace Onix.Writebook.Acesso.Application.Services
             {
                 if (tokenRedefinicaoSenha.EstaExpirado())
                 {
-                    _notificationContext.AddError("Token de redefinição de senha expirado. Solicite um novo token.");
+                    _notificationContext.AddError(_stringLocalizer.GetString("ErroTokenRedefinicaoExpirado"));
                 }
                 else
                 {
-                    _notificationContext.AddError("Token de redefinição de senha já foi utilizado");
+                    _notificationContext.AddError(_stringLocalizer.GetString("ErroTokenRedefinicaoUtilizado"));
                 }
                 return;
             }
@@ -214,7 +214,7 @@ namespace Onix.Writebook.Acesso.Application.Services
                 // Atualiza o usuário
                 _usuarioRepository.Alterar(usuario);
                 await _acessosUnitOfWork.CommitAsync();
-                _notificationContext.AddSuccess("Senha redefinida com sucesso");
+                _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoSenhaRedefinida"));
             }
         }
 
@@ -238,11 +238,11 @@ namespace Onix.Writebook.Acesso.Application.Services
 
             if (emailEnviado)
             {
-                _notificationContext.AddSuccess("Email de confirmação enviado com sucesso");
+                _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoEmailConfirmacaoEnviado"));
             }
             else
             {
-                _notificationContext.AddError("Erro ao enviar email de confirmação");
+                _notificationContext.AddError(_stringLocalizer.GetString("ErroEmailConfirmacao"));
             }
 
             return emailEnviado;
@@ -254,7 +254,7 @@ namespace Onix.Writebook.Acesso.Application.Services
             if (usuario == null)
             {
                 // Por segurança, não informamos se o email existe ou não
-                _notificationContext.AddSuccess("Se o email estiver cadastrado, você receberá instruções para redefinir sua senha");
+                _notificationContext.AddSuccess(_stringLocalizer.GetString("MensagemSolicitacaoRedefinicao"));
                 return true;
             }
 
@@ -273,11 +273,11 @@ namespace Onix.Writebook.Acesso.Application.Services
                 var emailEnviado = await _emailAppService.EnviarEmailRedefinicaoSenhaAsync(emailRedefinicaoViewModel);
                 if (emailEnviado)
                 {
-                    _notificationContext.AddSuccess("Email de redefinição de senha enviado com sucesso");
+                    _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoEmailRedefinicaoEnviado"));
                 }
                 else
                 {
-                    _notificationContext.AddError("Erro ao enviar email de redefinição de senha");
+                    _notificationContext.AddError(_stringLocalizer.GetString("ErroEmailRedefinicao"));
                 }
                 return emailEnviado;
             }

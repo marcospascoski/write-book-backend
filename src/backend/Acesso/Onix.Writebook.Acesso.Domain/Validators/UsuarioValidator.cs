@@ -1,8 +1,10 @@
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Onix.Framework.Notifications.Interfaces;
 using Onix.Writebook.Acesso.Domain.Entities;
 using Onix.Writebook.Acesso.Domain.Interfaces;
 using Onix.Writebook.Core.Domain.Validators;
+using Onix.Writebook.Core.Resources;
 using System.Threading.Tasks;
 using System;
 
@@ -11,13 +13,16 @@ namespace Onix.Writebook.Acesso.Domain.Validators
     public class UsuarioValidator : BaseValidator<Usuario>, IUsuarioValidator
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IStringLocalizer<TextResource> _stringLocalizer;
 
         public UsuarioValidator(
             INotificationContext notificationContext,
-            IUsuarioRepository usuarioRepository)
+            IUsuarioRepository usuarioRepository,
+            IStringLocalizer<TextResource> stringLocalizer)
             : base(notificationContext)
         {
             _usuarioRepository = usuarioRepository;
+            _stringLocalizer = stringLocalizer;
 
             RuleFor(x => x.Id)
                 .NotEqual(Guid.Empty);
@@ -26,13 +31,13 @@ namespace Onix.Writebook.Acesso.Domain.Validators
                 .NotEmpty()
                 .MinimumLength(2)
                 .MaximumLength(128)
-                .WithMessage("O nome deve ter entre 2 e 128 caracteres.");
+                .WithMessage(_stringLocalizer.GetString("ErroUsuarioNomeTamanho"));
 
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .EmailAddress()
                 .MaximumLength(256)
-                .WithMessage("Email inválido.");
+                .WithMessage(_stringLocalizer.GetString("ErroEmailInvalido"));
         }
 
         public async Task<bool> IsValid(Usuario usuario)
@@ -41,7 +46,7 @@ namespace Onix.Writebook.Acesso.Domain.Validators
 
             if (await _usuarioRepository.JaCadastrado(usuario.Email, usuario.Id))
             {
-                NotificationContext.AddError("ErroUsuarioJaCadatradoEmail");
+                NotificationContext.AddError(_stringLocalizer.GetString("ErroUsuarioJaCadastradoEmail"));
             }
 
             var validationResults = Validate(usuario);
