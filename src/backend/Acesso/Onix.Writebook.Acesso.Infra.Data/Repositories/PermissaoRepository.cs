@@ -11,12 +11,8 @@ using System.Threading.Tasks;
 
 namespace Onix.Writebook.Acesso.Infra.Data.Repositories
 {
-    public class PermissaoRepository : EFCoreRepository<Permissao>, IPermissaoRepository
+    public class PermissaoRepository(AcessosDbContext context) : EFCoreRepository<Permissao>(context), IPermissaoRepository
     {
-        public PermissaoRepository(AcessosDbContext context) : base(context)
-        {
-        }
-
         public async Task<int> CountAsync()
         {
             return await base.CountAsync<Permissao>();

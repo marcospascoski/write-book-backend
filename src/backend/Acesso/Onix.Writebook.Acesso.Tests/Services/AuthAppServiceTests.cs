@@ -18,15 +18,13 @@ namespace Onix.Writebook.Acesso.Tests.Services
         IAuthAppService authAppService,
         IUsuarioRepository usuarioRepository,
         IUsuarioAppService usuarioAppService,
-        IAcessosUnitOfWork acessosUnitOfWork,
-        IStringLocalizer<TextResource> stringLocalizer)
+        IAcessosUnitOfWork acessosUnitOfWork)
     {
         private readonly INotificationContext _notificationContext = notificationContext;
         private readonly IAuthAppService _authAppService = authAppService;
         private readonly IUsuarioRepository _usuarioRepository = usuarioRepository;
         private readonly IUsuarioAppService _usuarioAppService = usuarioAppService;
         private readonly IAcessosUnitOfWork _acessosUnitOfWork = acessosUnitOfWork;
-        private readonly IStringLocalizer<TextResource> _stringLocalizer = stringLocalizer;
 
 
         #region Login Tests

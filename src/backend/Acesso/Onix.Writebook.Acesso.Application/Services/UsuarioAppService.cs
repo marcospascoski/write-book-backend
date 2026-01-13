@@ -29,44 +29,22 @@ namespace Onix.Writebook.Acesso.Application.Services
         ITokenRedefinicaoSenhaRepository tokenRedefinicaoSenhaRepository,
         ITokenRedefinicaoSenhaValidator tokenRedefinicaoSenhaValidator) : IUsuarioAppService
     {
-        private readonly INotificationContext _notificationContext = notificationContext;
-        private readonly IAcessosUnitOfWork _acessosUnitOfWork = acessosUnitOfWork;
-        private readonly IUsuarioRepository _usuarioRepository = usuarioRepository;
-        private readonly IUsuarioValidator _usuarioValidator = usuarioValidator;
-        private readonly IMapper _mapper = mapper;
-        private readonly IStringLocalizer<TextResource> _stringLocalizer = stringLocalizer;
-        private readonly IEmailAppService _emailAppService = emailAppService;
-        private readonly ITokenRedefinicaoSenhaRepository _tokenRedefinicaoSenhaRepository = tokenRedefinicaoSenhaRepository;
-        private readonly ITokenRedefinicaoSenhaValidator _tokenRedefinicaoSenhaValidator = tokenRedefinicaoSenhaValidator;
-
-        public async Task<bool> CreditarRecompensa(Guid usuarioId, decimal valor)
-        {
-            var usuario = await _usuarioRepository.PesquisarPorIdAsync(usuarioId);
-            if (usuario == null) return false;
-
-            // No sistema atual não persistimos saldos financeiros diretamente no módulo de Acesso.
-            // Marca apenas a modificação e persiste para fins de mock/registro.
-            usuario.AlterarDados(usuario);
-            _usuarioRepository.Alterar(usuario);
-            return await _acessosUnitOfWork.CommitAsync() > 0;
-        }
-
         public async Task<Guid> CadastrarAsync(RegistrarUsuarioViewModel model)
         {
-            var prototype = _mapper.Map<Usuario>(model);
+            var prototype = mapper.Map<Usuario>(model);
             if (prototype == null)
             {
-                var usuarioString = _stringLocalizer.GetString("Usuario");
-                _notificationContext.AddError(_stringLocalizer.GetString("ErroEntidadeInvalida", usuarioString));
+                var usuarioString = stringLocalizer.GetString("Usuario");
+                notificationContext.AddError(stringLocalizer.GetString("ErroEntidadeInvalida", usuarioString));
                 return default;
             }
 
             var usuario = Usuario.Factory.Create(prototype);
-            if (await _usuarioValidator.IsValid(usuario))
+            if (await usuarioValidator.IsValid(usuario))
             {
-                await _usuarioRepository.Cadastrar(usuario);
-                await _acessosUnitOfWork.CommitAsync();
-                _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoCriarUsuario"));
+                await usuarioRepository.Cadastrar(usuario);
+                await acessosUnitOfWork.CommitAsync();
+                notificationContext.AddSuccess(stringLocalizer.GetString("SucessoCriarUsuario"));
                 
                 await EnviarEmailConfirmacaoAsync(usuario.Id);
                 
@@ -77,105 +55,105 @@ namespace Onix.Writebook.Acesso.Application.Services
 
         public async Task Alterar(UsuarioViewModel usuarioViewModel)
         {
-            var usuario = await _usuarioRepository.PesquisarPorIdAsync(usuarioViewModel.Id);
+            var usuario = await usuarioRepository.PesquisarPorIdAsync(usuarioViewModel.Id);
             if (usuario == null)
             {
-                var usuarioString = _stringLocalizer.GetString("Usuario");
-                _notificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
+                var usuarioString = stringLocalizer.GetString("Usuario");
+                notificationContext.AddError(stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
                 return;
             }
-            var usuarioAlterarDados = _mapper.Map<Usuario>(usuarioViewModel);
+            var usuarioAlterarDados = mapper.Map<Usuario>(usuarioViewModel);
             usuario.AlterarDados(usuarioAlterarDados);
-            if (await _usuarioValidator.IsValid(usuario))
+            if (await usuarioValidator.IsValid(usuario))
             {
-                _usuarioRepository.Alterar(usuario);
-                await _acessosUnitOfWork.CommitAsync();
-                _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoAlterarDadosUsuario"));
+                usuarioRepository.Alterar(usuario);
+                await acessosUnitOfWork.CommitAsync();
+                notificationContext.AddSuccess(stringLocalizer.GetString("SucessoAlterarDadosUsuario"));
             }
         }
 
         public async Task<UsuarioViewModel> ObterPorEmailAsync(string email)
         {
-            var usuario = await _usuarioRepository.PesquisarPorEmailAsync(email);
+            var usuario = await usuarioRepository.PesquisarPorEmailAsync(email);
             
             if (usuario == null)
             {
-                var usuarioString = _stringLocalizer.GetString("Usuario");
-                _notificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
+                var usuarioString = stringLocalizer.GetString("Usuario");
+                notificationContext.AddError(stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
                 return null;
             }
 
-            return _mapper.Map<UsuarioViewModel>(usuario);
+            return mapper.Map<UsuarioViewModel>(usuario);
         }
 
         public async Task<UsuarioViewModel> PesquisarPorIdAsync(Guid id)
         {
-            var usuario = await _usuarioRepository.PesquisarPorIdAsync(id);
+            var usuario = await usuarioRepository.PesquisarPorIdAsync(id);
             
             if (usuario == null)
             {
-                var usuarioString = _stringLocalizer.GetString("Usuario");
-                _notificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
+                var usuarioString = stringLocalizer.GetString("Usuario");
+                notificationContext.AddError(stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
                 return null;
             }
 
-            return _mapper.Map<UsuarioViewModel>(usuario);
+            return mapper.Map<UsuarioViewModel>(usuario);
         }
 
         public async Task AlterarStatus(UsuarioAlterarStatusViewModel alterarStatusViewModel)
         {
-            var usuario = await _usuarioRepository.PesquisarPorIdAsync(alterarStatusViewModel.Id);
+            var usuario = await usuarioRepository.PesquisarPorIdAsync(alterarStatusViewModel.Id);
             if (usuario == null)
             {
-                var usuarioString = _stringLocalizer.GetString("Usuario");
-                _notificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
+                var usuarioString = stringLocalizer.GetString("Usuario");
+                notificationContext.AddError(stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
                 return;
             }
-            var status = _mapper.Map<EStatusUsuario>(alterarStatusViewModel.Status);
+            var status = mapper.Map<EStatusUsuario>(alterarStatusViewModel.Status);
             usuario.AlterarStatus(status);
-            if (await _usuarioValidator.IsValid(usuario))
+            if (await usuarioValidator.IsValid(usuario))
             {
-                _usuarioRepository.Alterar(usuario);
-                await _acessosUnitOfWork.CommitAsync();
-                _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoAlterarDadosUsuario"));
+                usuarioRepository.Alterar(usuario);
+                await acessosUnitOfWork.CommitAsync();
+                notificationContext.AddSuccess(stringLocalizer.GetString("SucessoAlterarDadosUsuario"));
             }
         }
 
         public async Task<IPagedItems<UsuarioViewModel>> Paginar(FiltroUsuarioViewModel model)
         {
-            var pagedItems = await _usuarioRepository.Paginar(model, model.Texto);
-            return _mapper.Map<PagedItems<UsuarioViewModel>>(pagedItems);
+            var pagedItems = await usuarioRepository.Paginar(model, model.Texto);
+            return mapper.Map<PagedItems<UsuarioViewModel>>(pagedItems);
         }
 
         public async Task<UsuarioViewModel> PesquisarPorId(Guid id)
         {
-            var usuario = await _usuarioRepository.PesquisarPorIdAsync(id);
-            var usuarioViewModel = _mapper.Map<UsuarioViewModel>(usuario);
+            var usuario = await usuarioRepository.PesquisarPorIdAsync(id);
+            var usuarioViewModel = mapper.Map<UsuarioViewModel>(usuario);
             if (usuarioViewModel != null) usuarioViewModel.Senha = null;
             return usuarioViewModel;
         }
 
         public async Task<bool> AlterarPerfilAsync(Guid usuarioId, UsuarioViewModel updates)
         {
-            var usuario = await _usuarioRepository.PesquisarPorIdAsync(usuarioId);
+            var usuario = await usuarioRepository.PesquisarPorIdAsync(usuarioId);
             if (usuario == null) return false;
 
             // No mock o perfil atualiza avatar, nome, etc.
-            var dadosAtualizar = _mapper.Map<Usuario>(updates);
+            var dadosAtualizar = mapper.Map<Usuario>(updates);
             usuario.AlterarDados(dadosAtualizar);
 
-            _usuarioRepository.Alterar(usuario);
-            return await _acessosUnitOfWork.CommitAsync() > 0;
+            usuarioRepository.Alterar(usuario);
+            return await acessosUnitOfWork.CommitAsync() > 0;
         }
 
         public async Task RedefinirSenhaAsync(UsuarioRedefinirSenhaViewModel redefinirSenhaViewModel)
         {
             // Busca o token
-            var tokenRedefinicaoSenha = await _tokenRedefinicaoSenhaRepository.PesquisarPorTokenAsync(redefinirSenhaViewModel.Token);
+            var tokenRedefinicaoSenha = await tokenRedefinicaoSenhaRepository.PesquisarPorTokenAsync(redefinirSenhaViewModel.Token);
             
             if (tokenRedefinicaoSenha == null)
             {
-                _notificationContext.AddError(_stringLocalizer.GetString("ErroTokenRedefinicaoInvalido"));
+                notificationContext.AddError(stringLocalizer.GetString("ErroTokenRedefinicaoInvalido"));
                 return;
             }
 
@@ -184,65 +162,65 @@ namespace Onix.Writebook.Acesso.Application.Services
             {
                 if (tokenRedefinicaoSenha.EstaExpirado())
                 {
-                    _notificationContext.AddError(_stringLocalizer.GetString("ErroTokenRedefinicaoExpirado"));
+                    notificationContext.AddError(stringLocalizer.GetString("ErroTokenRedefinicaoExpirado"));
                 }
                 else
                 {
-                    _notificationContext.AddError(_stringLocalizer.GetString("ErroTokenRedefinicaoUtilizado"));
+                    notificationContext.AddError(stringLocalizer.GetString("ErroTokenRedefinicaoUtilizado"));
                 }
                 return;
             }
 
             // Busca o usuário
-            var usuario = await _usuarioRepository.PesquisarPorIdAsync(tokenRedefinicaoSenha.UsuarioId);
+            var usuario = await usuarioRepository.PesquisarPorIdAsync(tokenRedefinicaoSenha.UsuarioId);
             if (usuario == null)
             {
-                var usuarioString = _stringLocalizer.GetString("Usuario");
-                _notificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
+                var usuarioString = stringLocalizer.GetString("Usuario");
+                notificationContext.AddError(stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
                 return;
             }
 
             // Redefine a senha
             usuario.RedefinirSenha(redefinirSenhaViewModel.NovaSenha);
             
-            if (await _usuarioValidator.IsValid(usuario))
+            if (await usuarioValidator.IsValid(usuario))
             {
                 // Marca o token como utilizado
                 tokenRedefinicaoSenha.MarcarComoUtilizado();
-                _tokenRedefinicaoSenhaRepository.Alterar(tokenRedefinicaoSenha);
+                tokenRedefinicaoSenhaRepository.Alterar(tokenRedefinicaoSenha);
                 
                 // Atualiza o usuário
-                _usuarioRepository.Alterar(usuario);
-                await _acessosUnitOfWork.CommitAsync();
-                _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoSenhaRedefinida"));
+                usuarioRepository.Alterar(usuario);
+                await acessosUnitOfWork.CommitAsync();
+                notificationContext.AddSuccess(stringLocalizer.GetString("SucessoSenhaRedefinida"));
             }
         }
 
         public async Task<bool> EnviarEmailConfirmacaoAsync(Guid usuarioId)
         {
-            var usuario = await _usuarioRepository.PesquisarPorIdAsync(usuarioId);
+            var usuario = await usuarioRepository.PesquisarPorIdAsync(usuarioId);
             if (usuario == null)
             {
-                var usuarioString = _stringLocalizer.GetString("Usuario");
-                _notificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
+                var usuarioString = stringLocalizer.GetString("Usuario");
+                notificationContext.AddError(stringLocalizer.GetString("ObjetoNaoEncontrado", usuarioString));
                 return false;
             }
 
             var tokenConfirmacao = Guid.NewGuid().ToString();
-            var emailConfirmacaoViewModel = _mapper.Map<EmailConfirmacaoViewModel>(usuario, opts =>
+            var emailConfirmacaoViewModel = mapper.Map<EmailConfirmacaoViewModel>(usuario, opts =>
             {
                 opts.Items["TokenConfirmacao"] = tokenConfirmacao;
             });
             
-            var emailEnviado = await _emailAppService.EnviarEmailConfirmacaoAsync(emailConfirmacaoViewModel);
+            var emailEnviado = await emailAppService.EnviarEmailConfirmacaoAsync(emailConfirmacaoViewModel);
 
             if (emailEnviado)
             {
-                _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoEmailConfirmacaoEnviado"));
+                notificationContext.AddSuccess(stringLocalizer.GetString("SucessoEmailConfirmacaoEnviado"));
             }
             else
             {
-                _notificationContext.AddError(_stringLocalizer.GetString("ErroEmailConfirmacao"));
+                notificationContext.AddError(stringLocalizer.GetString("ErroEmailConfirmacao"));
             }
 
             return emailEnviado;
@@ -250,34 +228,34 @@ namespace Onix.Writebook.Acesso.Application.Services
 
         public async Task<bool> SolicitarRedefinicaoSenhaAsync(SolicitarRedefinicaoSenhaViewModel model)
         {
-            var usuario = await _usuarioRepository.PesquisarPorEmailAsync(model.Email);
+            var usuario = await usuarioRepository.PesquisarPorEmailAsync(model.Email);
             if (usuario == null)
             {
                 // Por segurança, não informamos se o email existe ou não
-                _notificationContext.AddSuccess(_stringLocalizer.GetString("MensagemSolicitacaoRedefinicao"));
+                notificationContext.AddSuccess(stringLocalizer.GetString("MensagemSolicitacaoRedefinicao"));
                 return true;
             }
 
-            await _tokenRedefinicaoSenhaRepository.InvalidarTokensAntigos(usuario.Id);
+            await tokenRedefinicaoSenhaRepository.InvalidarTokensAntigos(usuario.Id);
             
             var tokenRedefinicaoSenha = new TokenRedefinicaoSenha(usuario.Id);
-            if (await _tokenRedefinicaoSenhaValidator.IsValid(tokenRedefinicaoSenha))
+            if (await tokenRedefinicaoSenhaValidator.IsValid(tokenRedefinicaoSenha))
             {
-                await _tokenRedefinicaoSenhaRepository.Cadastrar(tokenRedefinicaoSenha);
-                await _acessosUnitOfWork.CommitAsync();
-                var emailRedefinicaoViewModel = _mapper.Map<EmailRedefinicaoSenhaViewModel>(usuario, opts =>
+                await tokenRedefinicaoSenhaRepository.Cadastrar(tokenRedefinicaoSenha);
+                await acessosUnitOfWork.CommitAsync();
+                var emailRedefinicaoViewModel = mapper.Map<EmailRedefinicaoSenhaViewModel>(usuario, opts =>
                 {
                     opts.Items["TokenRedefinicao"] = tokenRedefinicaoSenha.Token;
                 });
 
-                var emailEnviado = await _emailAppService.EnviarEmailRedefinicaoSenhaAsync(emailRedefinicaoViewModel);
+                var emailEnviado = await emailAppService.EnviarEmailRedefinicaoSenhaAsync(emailRedefinicaoViewModel);
                 if (emailEnviado)
                 {
-                    _notificationContext.AddSuccess(_stringLocalizer.GetString("SucessoEmailRedefinicaoEnviado"));
+                    notificationContext.AddSuccess(stringLocalizer.GetString("SucessoEmailRedefinicaoEnviado"));
                 }
                 else
                 {
-                    _notificationContext.AddError(_stringLocalizer.GetString("ErroEmailRedefinicao"));
+                    notificationContext.AddError(stringLocalizer.GetString("ErroEmailRedefinicao"));
                 }
                 return emailEnviado;
             }

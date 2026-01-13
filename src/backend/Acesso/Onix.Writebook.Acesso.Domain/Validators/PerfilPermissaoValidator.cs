@@ -12,53 +12,40 @@ using System.Threading.Tasks;
 
 namespace Onix.Writebook.Acesso.Domain.Validators
 {
-    public class PerfilPermissaoValidator : BaseValidator<PerfilPermissao>, IPerfilPermissaoValidator
+    public class PerfilPermissaoValidator(
+        INotificationContext notificationContext,
+        IPerfilPermissaoRepository perfilPermissaoRepository,
+        IPerfilRepository perfilRepository,
+        IPermissaoRepository permissaoRepository,
+        IStringLocalizer<Core.Resources.TextResource> stringLocalizer)
+        : BaseValidator<PerfilPermissao>(notificationContext), IPerfilPermissaoValidator
     {
-        private readonly IPerfilPermissaoRepository _perfilPermissaoRepository;
-        private readonly IPerfilRepository _perfilRepository;
-        private readonly IPermissaoRepository _permissaoRepository;
-        private readonly IStringLocalizer<Core.Resources.TextResource> _stringLocalizer;
-        public PerfilPermissaoValidator(
-            INotificationContext notificationContext,
-            IPerfilPermissaoRepository perfilPermissaoRepository,
-            IPerfilRepository perfilRepository,
-            IPermissaoRepository permissaoRepository,
-            IStringLocalizer<Core.Resources.TextResource> stringLocalizer)
-            : base(notificationContext)
-        {
-            _perfilPermissaoRepository = perfilPermissaoRepository;
-            _perfilRepository = perfilRepository;
-            _permissaoRepository = permissaoRepository;
-            _stringLocalizer = stringLocalizer;
-
-        }
-
         public async Task<bool> IsValid(PerfilPermissao perfil)
         {
             if (perfil == null)
             {
                 return false;
             }
-            
+
             // Validar se o Perfil existe
-            var perfilExiste = await _perfilRepository.PesquisarPorIdAsync(perfil.PerfilId);
+            var perfilExiste = await perfilRepository.PesquisarPorIdAsync(perfil.PerfilId);
             if (perfilExiste == null)
             {
-                var perfilString = _stringLocalizer.GetString("Perfil");
-                NotificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", perfilString));
+                var perfilString = stringLocalizer.GetString("Perfil");
+                NotificationContext.AddError(stringLocalizer.GetString("ObjetoNaoEncontrado", perfilString));
             }
-            
+
             // Validar se a Permissão existe
-            var permissaoExiste = await _permissaoRepository.PesquisarPorIdAsync(perfil.PermissaoId);
+            var permissaoExiste = await permissaoRepository.PesquisarPorIdAsync(perfil.PermissaoId);
             if (permissaoExiste == null)
             {
-                var permissaoString = _stringLocalizer.GetString("Permissao");
-                NotificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", permissaoString));
+                var permissaoString = stringLocalizer.GetString("Permissao");
+                NotificationContext.AddError(stringLocalizer.GetString("ObjetoNaoEncontrado", permissaoString));
             }
-            
-            if (await _perfilPermissaoRepository.JaCadastrado(perfil.PerfilId, perfil.PermissaoId))
+
+            if (await perfilPermissaoRepository.JaCadastrado(perfil.PerfilId, perfil.PermissaoId))
             {
-                NotificationContext.AddError(_stringLocalizer.GetString("ErroPerfilPermissaoJaCadatrado"));
+                NotificationContext.AddError(stringLocalizer.GetString("ErroPerfilPermissaoJaCadatrado"));
             }
 
             var validationResults = Validate(perfil);

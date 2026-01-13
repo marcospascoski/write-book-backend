@@ -14,16 +14,14 @@ public class BookAppService(
     IMapper mapper
     ) : IBookAppService
 {
-    private readonly IBookValidator _bookValidator = bookValidator;
-    private readonly IMapper _mapper = mapper;
     
     public async Task<byte[]> ExportAsync(BookReportViewModel model, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(model);
 
-        var book = _mapper.Map<Book>(model);
+        var book = mapper.Map<Book>(model);
 
-        if (await _bookValidator.IsValid(book))
+        if (await bookValidator.IsValid(book))
         {
             var html = BookHtmlTemplate.Render(model);
             return await PuppeteerPdfRenderer.RenderAsync(html, cancellationToken);

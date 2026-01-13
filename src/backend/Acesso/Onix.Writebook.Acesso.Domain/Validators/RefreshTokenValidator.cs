@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Onix.Writebook.Acesso.Domain.Validators
 {
-    public class TokenRedefinicaoSenhaValidator : BaseValidator<TokenRedefinicaoSenha>, ITokenRedefinicaoSenhaValidator
+    public class RefreshTokenValidator : BaseValidator<RefreshToken>, IRefreshTokenValidator
     {
         private readonly IStringLocalizer<TextResource> _stringLocalizer;
 
-        public TokenRedefinicaoSenhaValidator(
+        public RefreshTokenValidator(
             INotificationContext notificationContext,
             IStringLocalizer<TextResource> stringLocalizer)
             : base(notificationContext)
@@ -22,27 +22,28 @@ namespace Onix.Writebook.Acesso.Domain.Validators
             _stringLocalizer = stringLocalizer;
 
             RuleFor(x => x.UsuarioId)
-                .NotEqual(Guid.Empty)
-                .WithMessage(_stringLocalizer.GetString("ErroTokenUsuarioObrigatorio"));
+                            .NotEqual(Guid.Empty)
+                            .WithMessage(_stringLocalizer?.GetString("ErroTokenUsuarioObrigatorio"));
 
             RuleFor(x => x.Token)
                 .NotEmpty()
                 .Length(32)
-                .WithMessage(_stringLocalizer.GetString("ErroTokenFormatoInvalido"));
+                .WithMessage(_stringLocalizer?.GetString("ErroTokenFormatoInvalido"));
 
             RuleFor(x => x.CreatedAt)
                 .GreaterThan(DateTime.MinValue)
-                .WithMessage(_stringLocalizer.GetString("ErroTokenDataCriacao"));
+                .WithMessage(_stringLocalizer?.GetString("ErroTokenDataCriacao"));
+
             RuleFor(x => x.DataExpiracao)
                 .GreaterThan(x => x.CreatedAt)
-                .WithMessage(_stringLocalizer.GetString("ErroTokenDataExpiracao"));
+                .WithMessage(_stringLocalizer?.GetString("ErroTokenDataExpiracao"));
 
             RuleFor(x => x)
-                .Must(t => !t.Utilizado || t.DataUtilizacao.HasValue)
-                .WithMessage(_stringLocalizer.GetString("ErroTokenUtilizadoSemData"));
+                .Must(t => !t.Revogado || t.DataRevogacao.HasValue)
+                .WithMessage(_stringLocalizer?.GetString("ErroTokenRevogadoSemData"));
         }
 
-        public async Task<bool> IsValid(TokenRedefinicaoSenha token)
+        public async Task<bool> IsValid(RefreshToken token)
         {
             if (token == null)
             {
@@ -55,4 +56,3 @@ namespace Onix.Writebook.Acesso.Domain.Validators
         }
     }
 }
-            

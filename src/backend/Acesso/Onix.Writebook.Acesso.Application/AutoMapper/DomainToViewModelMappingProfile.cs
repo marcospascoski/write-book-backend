@@ -18,7 +18,8 @@ namespace Onix.Writebook.Acesso.Application.AutoMapper
         {
             CreateMap<SenhaValueObject, string>()
                 .ConstructUsing(x => x.Valor);
-            CreateMap<Usuario, UsuarioViewModel>();
+            CreateMap<Usuario, UsuarioViewModel>()
+                .ForMember(dest => dest.Senha, opt => opt.Ignore());
             CreateMap<Usuario, RegistrarUsuarioViewModel>();
 
             CreateMap<Usuario, EmailRedefinicaoSenhaViewModel>()

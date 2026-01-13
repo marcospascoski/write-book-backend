@@ -43,7 +43,9 @@ namespace Onix.Writebook.Acesso.Infra.IoC
             services.AddScoped<IAcessosUnitOfWork, AcessosUnitOfWork>();
             services.AddScoped<IPerfilRepository, PerfilRepository>();
             services.AddScoped<IPermissaoRepository, PermissaoRepository>();
-            services.AddScoped<IPerfilPermissaoRepository, PerfilPermissaoRepository>();
+            services.AddScoped<IPerfilPermissaoRepository, PerfilPermissaoRepository>();                    
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IRefreshTokenValidator, RefreshTokenValidator>();
         }
     }
 }

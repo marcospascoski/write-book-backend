@@ -19,31 +19,25 @@ namespace Onix.Writebook.Acesso.Application.Services
         INotificationContext notificationContext,
         IUsuarioRepository usuarioRepository,
         IAcessosUnitOfWork acessosUnitOfWork,
+        IRefreshTokenRepository refreshTokenRepository,
         ITokenBlacklistService tokenBlacklistService,
         IMapper mapper,
         IStringLocalizer<TextResource> stringLocalizer)
         : IAuthAppService
     {
-        private readonly INotificationContext _notificationContext = notificationContext;
-        private readonly IUsuarioRepository _usuarioRepository = usuarioRepository;
-        private readonly IAcessosUnitOfWork _acessosUnitOfWork = acessosUnitOfWork;
-        private readonly ITokenBlacklistService _tokenBlacklistService = tokenBlacklistService;
-        private readonly IMapper _mapper = mapper;
-        private readonly IStringLocalizer<TextResource> _stringLocalizer = stringLocalizer;
-
         public async Task<UsuarioViewModel> Login(LoginViewModel loginViewModel)
         {
-            var usuario = await _usuarioRepository.PesquisarPorEmailAsync(loginViewModel.Email);
+            var usuario = await usuarioRepository.PesquisarPorEmailAsync(loginViewModel.Email);
             if (usuario == null)
             {
-                var UsuarioString = _stringLocalizer.GetString("Usuario");
-                _notificationContext.AddError(_stringLocalizer.GetString("ObjetoNaoEncontrado", UsuarioString));
+                var UsuarioString = stringLocalizer.GetString("Usuario");
+                notificationContext.AddError(stringLocalizer.GetString("ObjetoNaoEncontrado", UsuarioString));
                 return null;
             }
 
             if (!usuario.Senha.ValidarSenha(loginViewModel.Senha, usuario.Salt.Valor))
             {
-                _notificationContext.AddError(_stringLocalizer.GetString("ErroSenhaInvalida"));
+                notificationContext.AddError(stringLocalizer.GetString("ErroSenhaInvalida"));
                 return null;
             }
 
@@ -55,22 +49,28 @@ namespace Onix.Writebook.Acesso.Application.Services
 
             var accessToken = JwtConfig.GerarAccessToken(claims);
 
-            if (await _tokenBlacklistService.EstaNaBlackListAsync(accessToken))
+            if (await tokenBlacklistService.EstaNaBlackListAsync(accessToken))
             {
-                _notificationContext.AddError(_stringLocalizer["TokenInvalido"]);
+                notificationContext.AddError(stringLocalizer["TokenInvalido"]);
                 return null;
             }
 
-            var usuarioViewModel = _mapper.Map<UsuarioViewModel>(usuario);
-            usuarioViewModel.Senha = null;
+            // Create a new refresh token for the user
+            var refreshToken = new RefreshToken(usuario.Id, ipAddress: "0.0.0.0", userAgent: "Unknown");
+            await refreshTokenRepository.Cadastrar(refreshToken);
+
+            await acessosUnitOfWork.CommitAsync();
+
+            var usuarioViewModel = mapper.Map<UsuarioViewModel>(usuario);
             usuarioViewModel.AccessToken = accessToken;
+            usuarioViewModel.RefreshToken = refreshToken.Token;
 
             return usuarioViewModel;
         }
 
-        public Task Logout(string accessToken)
+        public async Task Logout(string token)
         {
-            return Task.CompletedTask;
+            await tokenBlacklistService.CadastrarNaBlackListAsync(token);
         }
     }
 }

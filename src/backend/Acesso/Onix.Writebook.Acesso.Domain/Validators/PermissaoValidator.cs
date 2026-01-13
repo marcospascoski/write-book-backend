@@ -17,6 +17,7 @@ namespace Onix.Writebook.Acesso.Domain.Validators
     {
         private readonly IPermissaoRepository _perfilRepository;
         private readonly IStringLocalizer<Core.Resources.TextResource> _stringLocalizer;
+
         public PermissaoValidator(
             INotificationContext notificationContext,
             IPermissaoRepository perfilRepository,
@@ -25,12 +26,12 @@ namespace Onix.Writebook.Acesso.Domain.Validators
         {
             _perfilRepository = perfilRepository;
             _stringLocalizer = stringLocalizer;
-
+            
             RuleFor(x => x.Nome)
                 .NotEmpty()
                 .MinimumLength(2)
                 .MaximumLength(128)
-                .WithName(stringLocalizer.GetString("Nome"));
+                .WithName(_stringLocalizer.GetString("Nome"));
         }
 
         public async Task<bool> IsValid(Permissao perfil)

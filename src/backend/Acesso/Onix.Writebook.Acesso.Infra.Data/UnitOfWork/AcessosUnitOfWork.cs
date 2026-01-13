@@ -4,10 +4,8 @@ using Onix.Framework.Infra.Data.EFCore;
 
 namespace Onix.Writebook.Acesso.Infra.Data.UnitOfWork
 {
-    public class AcessosUnitOfWork : EFCoreUnitOfWork, IAcessosUnitOfWork
+    public class AcessosUnitOfWork(AcessosDbContext context) : EFCoreUnitOfWork(context), IAcessosUnitOfWork
     {
-        public AcessosUnitOfWork(AcessosDbContext context) : base(context)
-        {
-        }
+        
     }
 }

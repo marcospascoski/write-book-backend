@@ -9,7 +9,7 @@ namespace Onix.Writebook.Acesso.Application.Services
 {
     public class TokenBlacklistService : ITokenBlacklistService
     {
-        private readonly HashSet<string> _blacklistedTokens = new HashSet<string>();
+        private readonly HashSet<string> _blacklistedTokens = new();
 
         public async Task CadastrarNaBlackListAsync(string token)
         {

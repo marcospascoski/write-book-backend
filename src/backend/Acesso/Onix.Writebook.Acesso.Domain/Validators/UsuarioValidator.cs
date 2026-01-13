@@ -24,6 +24,7 @@ namespace Onix.Writebook.Acesso.Domain.Validators
             _usuarioRepository = usuarioRepository;
             _stringLocalizer = stringLocalizer;
 
+
             RuleFor(x => x.Id)
                 .NotEqual(Guid.Empty);
 
@@ -31,15 +32,15 @@ namespace Onix.Writebook.Acesso.Domain.Validators
                 .NotEmpty()
                 .MinimumLength(2)
                 .MaximumLength(128)
-                .WithMessage(_stringLocalizer.GetString("ErroUsuarioNomeTamanho"));
+                .WithMessage(_stringLocalizer?.GetString("ErroUsuarioNomeTamanho"));
 
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .EmailAddress()
                 .MaximumLength(256)
-                .WithMessage(_stringLocalizer.GetString("ErroEmailInvalido"));
+                .WithMessage(_stringLocalizer?.GetString("ErroEmailInvalido"));
         }
-
+        
         public async Task<bool> IsValid(Usuario usuario)
         {
             if (usuario == null) return false;

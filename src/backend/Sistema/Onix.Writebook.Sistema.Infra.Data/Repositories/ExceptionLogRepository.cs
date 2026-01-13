@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Onix.Writebook.Sistema.Infra.Data.Repositories
 {
-    public class ExceptionLogRepository : EFCoreRepository<ExceptionLog>, IExceptionLogRepository
+    public class ExceptionLogRepository(SistemaDbContext context) 
+        : EFCoreRepository<ExceptionLog>(context), IExceptionLogRepository
     {
-        public ExceptionLogRepository(SistemaDbContext context) : base(context)
-        {
-        }
         public void Add(ExceptionLog exceptionLog)
         {
             base.Add<ExceptionLog>(exceptionLog);

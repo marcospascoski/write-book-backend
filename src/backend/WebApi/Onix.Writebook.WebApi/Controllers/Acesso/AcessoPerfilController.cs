@@ -18,41 +18,39 @@ namespace Onix.Writebook.WebApi.Controllers.Acesso
         IPerfilAppService perfilAppService)
         : BaseController(notificationContext, exceptionProcessor)
     {
-        private readonly IPerfilAppService _perfilAppService = perfilAppService;
-
         [HttpPost]
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Cadastrar(PerfilViewModel model)
         {
-            return await TryExecuteAsync(_perfilAppService.Cadastrar(model));
+            return await TryExecuteAsync(perfilAppService.Cadastrar(model));
         }
 
         [HttpPut]
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Alterar(PerfilViewModel model)
         {
-            return await TryExecuteNoResultAsync(_perfilAppService.Alterar(model));
+            return await TryExecuteNoResultAsync(perfilAppService.Alterar(model));
         }
 
         [HttpGet, Route("{id}")]
         [Authorize(Policy = "ClienteOnly")]
         public async Task<IActionResult> PesquisarPorId(long id)
         {
-            return await TryExecuteAsync(_perfilAppService.PesquisarPorId(id));
+            return await TryExecuteAsync(perfilAppService.PesquisarPorId(id));
         }
 
         [HttpPatch, Route("status")]
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> AlterarStatus(PerfilAlterarStatusViewModel<long> model)
         {
-            return await TryExecuteNoResultAsync(_perfilAppService.AlterarStatus(model));
+            return await TryExecuteNoResultAsync(perfilAppService.AlterarStatus(model));
         }
 
         [HttpPost, Route("paginar")]
         [Authorize(Policy = "ClienteOnly")]
         public async Task<IActionResult> Paginar(FiltroPerfilViewModel model)
         {
-            return await TryExecuteAsync(_perfilAppService.Paginar(model));
+            return await TryExecuteAsync(perfilAppService.Paginar(model));
         }
     }
 }

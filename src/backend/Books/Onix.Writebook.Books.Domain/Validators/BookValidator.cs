@@ -19,10 +19,10 @@ namespace Onix.Writebook.Books.Domain.Validators
         private readonly IStringLocalizer<TextResource> _stringLocalizer;
 
         public BookValidator(
-            INotificationContext notificationContext, 
-            IUsuarioRepository usuarioRepository, 
-            IStringLocalizer<TextResource> stringLocalizer
-            ) : base(notificationContext)
+            INotificationContext notificationContext,
+            IUsuarioRepository usuarioRepository,
+            IStringLocalizer<TextResource> stringLocalizer)
+            : base(notificationContext)
         {
             _usuarioRepository = usuarioRepository;
             _stringLocalizer = stringLocalizer;
@@ -32,8 +32,7 @@ namespace Onix.Writebook.Books.Domain.Validators
 
             RuleFor(x => x.Title)
                 .NotEmpty()
-                .WithMessage(_stringLocalizer.GetString("BookTitleRequired"));
-
+                .WithMessage(_stringLocalizer?.GetString("BookTitleRequired"));
         }
 
         public async Task<bool> IsValid(Book book)

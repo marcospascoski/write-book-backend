@@ -17,12 +17,10 @@ public class BooksController(
     IBookAppService bookPdfReportService)
     : BaseController(notificationContext, exceptionProcessor)
 {
-    private readonly IBookAppService _bookPdfReportService = bookPdfReportService;
-
     [HttpPost, Route("exportar/pdf")]
     public async Task<IActionResult> ExportBookPdf([FromBody] BookReportViewModel model, CancellationToken cancellationToken)
     {
-        var pdfBytes = await _bookPdfReportService.ExportAsync(model, cancellationToken);
+        var pdfBytes = await bookPdfReportService.ExportAsync(model, cancellationToken);
 
         var fileName = string.IsNullOrWhiteSpace(model.Title)
             ? "book.pdf"

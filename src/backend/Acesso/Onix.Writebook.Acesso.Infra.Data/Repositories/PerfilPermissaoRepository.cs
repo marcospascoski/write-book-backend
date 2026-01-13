@@ -10,12 +10,9 @@ using System.Threading.Tasks;
 
 namespace Onix.Writebook.Acesso.Infra.Data.Repositories
 {
-    public class PerfilPermissaoRepository : EFCoreRepository<PerfilPermissao>, IPerfilPermissaoRepository
+    public class PerfilPermissaoRepository(AcessosDbContext context) 
+        : EFCoreRepository<PerfilPermissao>(context), IPerfilPermissaoRepository
     {
-        public PerfilPermissaoRepository(AcessosDbContext context) : base(context)
-        {
-        }
-
         public Task<bool> AnyAsync(long id)
         {
             return base.AnyAsync<PerfilPermissao>();

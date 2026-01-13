@@ -17,6 +17,7 @@ namespace Onix.Writebook.Acesso.Domain.Validators
     {
         private readonly IPerfilRepository _perfilRepository;
         private readonly IStringLocalizer<TextResource> _stringLocalizer;
+
         public PerfilValidator(
             INotificationContext notificationContext,
             IPerfilRepository perfilRepository,
@@ -30,7 +31,7 @@ namespace Onix.Writebook.Acesso.Domain.Validators
                 .NotEmpty()
                 .MinimumLength(2)
                 .MaximumLength(128)
-                .WithName(stringLocalizer.GetString("Nome"));
+                .WithName(_stringLocalizer?.GetString("Nome"));
         }
 
         public async Task<bool> IsValid(Perfil perfil)

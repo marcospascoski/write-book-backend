@@ -4,10 +4,8 @@ using Onix.Framework.Infra.Data.EFCore;
 
 namespace Onix.Writebook.Sistema.Infra.Data.UnitOfWork
 {
-    public class SistemaUnitOfWork : EFCoreUnitOfWork, ISistemaUnitOfWork
+    public class SistemaUnitOfWork(SistemaDbContext context) : EFCoreUnitOfWork(context), ISistemaUnitOfWork
     {
-        public SistemaUnitOfWork(SistemaDbContext context) : base(context)
-        {
-        }
+        
     }
 }

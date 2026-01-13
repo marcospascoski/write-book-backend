@@ -157,7 +157,7 @@ namespace Onix.Writebook.Acesso.Tests.Services
 
             var result = await _usuarioService.PesquisarPorId(usuario.Id);
             Assert.NotNull(result);
-            Assert.Equal((int)EStatusUsuario.Ativo, result.Status);
+            Assert.Equal(EStatusUsuario.Ativo.ToString(), result.Status);
         }
 
         [Fact]

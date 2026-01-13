@@ -12,7 +12,6 @@ namespace Onix.Writebook.Acesso.Application.Interfaces
         Task Alterar(UsuarioViewModel usuarioViewModel);
         Task<UsuarioViewModel> ObterPorEmailAsync(string email);
         Task<UsuarioViewModel> PesquisarPorId(Guid id);
-        Task<bool> CreditarRecompensa(Guid usuarioId, decimal valor);
         Task<bool> AlterarPerfilAsync(Guid usuarioId, UsuarioViewModel updates);
         Task AlterarStatus(UsuarioAlterarStatusViewModel alterarStatusViewModel);
         Task<IPagedItems<UsuarioViewModel>> Paginar(FiltroUsuarioViewModel model);

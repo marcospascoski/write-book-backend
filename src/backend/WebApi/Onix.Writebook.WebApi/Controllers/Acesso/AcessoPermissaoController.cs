@@ -18,37 +18,34 @@ namespace Onix.Writebook.WebApi.Controllers.Acesso
         IPermissaoAppService permissaoAppService)
         : BaseController(notificationContext, exceptionProcessor)
     {
-        private readonly IPermissaoAppService _permissaoAppService = permissaoAppService;
-
-
         [HttpPost]
         public async Task<IActionResult> Cadastrar(PermissaoViewModel model)
         {
-            return await TryExecuteAsync(_permissaoAppService.Cadastrar(model));
+            return await TryExecuteAsync(permissaoAppService.Cadastrar(model));
         }
 
         [HttpPut]
         public async Task<IActionResult> Alterar(PermissaoViewModel model)
         {
-            return await TryExecuteNoResultAsync(_permissaoAppService.Alterar(model));
+            return await TryExecuteNoResultAsync(permissaoAppService.Alterar(model));
         }
 
         [HttpGet, Route("{id}")]
         public async Task<IActionResult> PesquisarPorId(long id)
         {
-            return await TryExecuteAsync(_permissaoAppService.PesquisarPorId(id));
+            return await TryExecuteAsync(permissaoAppService.PesquisarPorId(id));
         }
 
         [HttpPatch, Route("status")]
         public async Task<IActionResult> AlterarStatus(PermissaoAlterarStatusViewModel<long> model)
         {
-            return await TryExecuteNoResultAsync(_permissaoAppService.AlterarStatus(model));
+            return await TryExecuteNoResultAsync(permissaoAppService.AlterarStatus(model));
         }
 
         [HttpPost, Route("paginar")]
         public async Task<IActionResult> Paginar(FiltroPermissaoViewModel model)
         {
-            return await TryExecuteAsync(_permissaoAppService.Paginar(model));
+            return await TryExecuteAsync(permissaoAppService.Paginar(model));
         }
     }
 }

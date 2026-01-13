@@ -10,12 +10,9 @@ using System.Threading.Tasks;
 
 namespace Onix.Writebook.Acesso.Infra.Data.Repositories
 {
-    public class UsuarioRepository : EFCoreRepository<Usuario>, IUsuarioRepository
+    public class UsuarioRepository(AcessosDbContext context) 
+        : EFCoreRepository<Usuario>(context), IUsuarioRepository
     {
-        public UsuarioRepository(AcessosDbContext context) : base(context)
-        {
-        }
-
         public async Task<int> CountAsync()
         {
             return await base.CountAsync<Usuario>();

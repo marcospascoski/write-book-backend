@@ -20,7 +20,7 @@ namespace Onix.Writebook.Acesso.Tests.Moqs
                 Nome = nome ?? ValuesMoq.CreateString(20),
                 Email = email ?? $"{ValuesMoq.CreateString(10)}@test.com",
                 Senha = senha ?? "Senha@123",
-                Status = (int)status,
+                Status = status.ToString(),
                 CreatedAt = DateTime.UtcNow
             };
         }
@@ -36,7 +36,7 @@ namespace Onix.Writebook.Acesso.Tests.Moqs
                 Nome = nome ?? ValuesMoq.CreateString(20),
                 Email = email,
                 Senha = senha ?? "Senha@123",
-                Status = (int)EStatusUsuario.PendenteConfirmacao,
+                Status = EStatusUsuario.PendenteConfirmacao.ToString(),
                 CreatedAt = DateTime.UtcNow
             };
         }
