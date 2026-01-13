@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "Onix Writebook - Autenticação e Permissões",
-    "description": "Collection para testar autenticação, login, logout, perfis e permissões",
+    "name": "Onix Writebook - Autenticaï¿½ï¿½o e Permissï¿½es",
+    "description": "Collection para testar autenticaï¿½ï¿½o, login, logout, perfis e permissï¿½es",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -16,7 +16,7 @@
   },
   "item": [
     {
-      "name": "Autenticação",
+      "name": "Autenticaï¿½ï¿½o",
       "item": [
         {
           "name": "Registrar Usuario",
@@ -62,8 +62,10 @@
                   "if (pm.response.code === 200) {",
                   "    var jsonData = pm.response.json();",
                   "    pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                  "    pm.environment.set(\"refreshToken\", jsonData.refreshToken);",
                   "    pm.environment.set(\"userId\", jsonData.id);",
-                  "    console.log(\"Token: \" + jsonData.accessToken);",
+                  "    console.log(\"Access Token: \" + jsonData.accessToken);",
+                  "    console.log(\"Refresh Token: \" + jsonData.refreshToken);",
                   "}"
                 ]
               }
@@ -130,30 +132,120 @@
             }
           }
         },
-        {
-          "name": "Logout",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
+            {
+              "name": "Logout",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{accessToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/logout",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "auth", "logout"]
                 }
-              ]
+              }
             },
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/logout",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "logout"]
+            {
+              "name": "Refresh Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 200) {",
+                      "    var jsonData = pm.response.json();",
+                      "    pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                      "    pm.environment.set(\"refreshToken\", jsonData.refreshToken);",
+                      "    console.log(\"New Access Token: \" + jsonData.accessToken);",
+                      "    console.log(\"New Refresh Token: \" + jsonData.refreshToken);",
+                      "}"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/refresh",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "auth", "refresh"]
+                }
+              }
+            },
+            {
+              "name": "Revoke Refresh Token",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{accessToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/revoke-token",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "auth", "revoke-token"]
+                }
+              }
+            },
+            {
+              "name": "Revoke All Refresh Tokens",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{accessToken}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/revoke-all",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "auth", "revoke-all"]
+                }
+              }
             }
-          }
-        }
-      ]
-    },
+          ]
+        },
     {
       "name": "Perfis",
       "item": [
@@ -291,7 +383,7 @@
       ]
     },
     {
-      "name": "Permissões",
+      "name": "Permissï¿½es",
       "item": [
         {
           "name": "Criar Permissao",
@@ -318,7 +410,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Criar Usuario\",\n  \"codigo\": \"usuario.criar\",\n  \"descricao\": \"Permissão para criar novos usuários\"\n}"
+              "raw": "{\n  \"nome\": \"Criar Usuario\",\n  \"codigo\": \"usuario.criar\",\n  \"descricao\": \"Permissï¿½o para criar novos usuï¿½rios\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/permissao",

@@ -22,21 +22,9 @@ namespace Onix.Writebook.Acesso.Application.AutoMapper
                 .ForMember(dest => dest.Senha, opt => opt.Ignore());
             CreateMap<Usuario, RegistrarUsuarioViewModel>();
 
-            CreateMap<Usuario, EmailRedefinicaoSenhaViewModel>()
-                .ForMember(dest => dest.Destinatario, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.NomeUsuario, opt => opt.MapFrom(src => src.Nome))
-                .ForMember(dest => dest.TokenRedefinicao, opt => opt.MapFrom((src, dest, destMember, context) =>
-                    context.Items.TryGetValue("TokenRedefinicao", out var token)
-                        ? token as string
-                        : string.Empty));
+            CreateMap<Usuario, EmailRedefinicaoSenhaViewModel>();
 
-            CreateMap<Usuario, EmailConfirmacaoViewModel>()
-                .ForMember(dest => dest.Destinatario, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.NomeUsuario, opt => opt.MapFrom(src => src.Nome))
-                .ForMember(dest => dest.TokenConfirmacao, opt => opt.MapFrom((src, dest, destMember, context) =>
-                    context.Items.TryGetValue("TokenConfirmacao", out var token)
-                        ? token as string
-                        : string.Empty));
+            CreateMap<Usuario, EmailConfirmacaoViewModel>();
 
             CreateMap<PagedItems<Usuario>, PagedItems<UsuarioViewModel>>();
 
@@ -47,6 +35,7 @@ namespace Onix.Writebook.Acesso.Application.AutoMapper
 
             CreateMap<Permissao, PermissaoViewModel>();
             CreateMap<PagedItems<Permissao>, PagedItems<PermissaoViewModel>>();
+            CreateMap<RefreshToken, RefreshTokenViewModel>();
         }
     }
 }

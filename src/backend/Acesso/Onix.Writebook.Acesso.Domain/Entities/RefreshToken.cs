@@ -1,3 +1,4 @@
+using Onix.Framework.Security;
 using Onix.Writebook.Core.Domain.Entities;
 using System;
 
@@ -19,20 +20,24 @@ namespace Onix.Writebook.Acesso.Domain.Entities
         protected RefreshToken() { }
 
         public RefreshToken(
-            Guid id,
             Guid usuarioId,
             string ipAddress,
             string userAgent,
             int diasExpiracao = 30)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             UsuarioId = usuarioId;
-            Token = Guid.NewGuid().ToString("N");
+            Token = GenerateSecureToken();
             DataExpiracao = DateTime.UtcNow.AddDays(diasExpiracao);
             Revogado = false;
             IPAddress = ipAddress;
             UserAgent = userAgent;
             CreatedAt = DateTime.UtcNow;
+        }
+
+        private static string GenerateSecureToken()
+        {
+            return EncryptionHelper.GenerateRandomSecret(32);
         }
 
         public bool EstaValido()
@@ -50,20 +55,30 @@ namespace Onix.Writebook.Acesso.Domain.Entities
         {
             return DateTime.UtcNow > DataExpiracao;
         }
-
-        public static class Factory
+        public bool CompararToken(string tokenParaComparar)
         {
-            public static RefreshToken Create(RefreshToken prototype)
-            {
-                return new RefreshToken
+            if (string.IsNullOrEmpty(tokenParaComparar))
+                return false;
+
+            // Usa SlowEquals do EncryptionHelper para comparação segura
+            return EncryptionHelper.SlowEquals(Token, tokenParaComparar);
+        }
+
+                public static class Factory
                 {
-                    Id = Guid.NewGuid(),
-                    UsuarioId = prototype.UsuarioId,
-                    IPAddress = prototype.IPAddress,
-                    UserAgent = prototype.UserAgent,
-                    DataExpiracao = prototype.DataExpiracao
-                };
+                    public static RefreshToken Create(
+                        Guid usuarioId,
+                        string ipAddress,
+                        string userAgent,
+                        int diasExpiracao = 30)
+                    {
+                        return new RefreshToken(
+                            usuarioId,
+                            ipAddress,
+                            userAgent,
+                            diasExpiracao
+                        );
+                    }
+                }
             }
         }
-    }
-}

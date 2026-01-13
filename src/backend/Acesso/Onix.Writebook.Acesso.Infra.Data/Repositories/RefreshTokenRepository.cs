@@ -47,5 +47,10 @@ namespace Onix.Writebook.Acesso.Infra.Data.Repositories
             return await base.CountAsync<RefreshToken>(
                 x => x.UsuarioId == usuarioId && !x.Revogado && x.DataExpiracao > DateTime.UtcNow);
         }
+
+        public async Task<bool> JaCadastrado(Guid usuarioId, Guid id)
+        {
+            return await base.AnyAsync<RefreshToken>(x => x.UsuarioId == usuarioId && x.Id == id);
+        }
     }
 }

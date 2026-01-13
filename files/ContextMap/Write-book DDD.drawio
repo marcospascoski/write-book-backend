@@ -17,7 +17,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="vO4-P6_-GiSk0oLsYAeo-74" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;&lt;b&gt;Usuario&lt;/b&gt;&lt;/span&gt;" vertex="1">
-          <mxGeometry height="40" width="90" x="286" y="-1010" as="geometry" />
+          <mxGeometry height="40" width="106" x="270" y="-1010" as="geometry" />
         </mxCell>
         <mxCell id="vO4-P6_-GiSk0oLsYAeo-75" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;span style=&quot;text-wrap: nowrap;&quot;&gt;&lt;b&gt;Perfil&lt;/b&gt;&lt;/span&gt;" vertex="1">
           <mxGeometry height="40" width="90" x="30" y="-1010" as="geometry" />
@@ -96,10 +96,25 @@
           <mxGeometry height="28" width="100" x="455" y="-980" as="geometry" />
         </mxCell>
         <mxCell id="cgCmWx0SVf8VV2sIjNma-5" edge="1" parent="1" source="cgCmWx0SVf8VV2sIjNma-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="vO4-P6_-GiSk0oLsYAeo-74">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="280" y="-921" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="cgCmWx0SVf8VV2sIjNma-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" value="TokenRedefinicaoSenha" vertex="1">
-          <mxGeometry height="38" width="146" x="230" y="-930" as="geometry" />
+          <mxGeometry height="28" width="147" x="90" y="-934" as="geometry" />
+        </mxCell>
+        <mxCell id="6u5K-86gfp4LCLUVIwE0-3" edge="1" parent="1" source="6u5K-86gfp4LCLUVIwE0-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="vO4-P6_-GiSk0oLsYAeo-74">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="-970" />
+              <mxPoint x="360" y="-970" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6u5K-86gfp4LCLUVIwE0-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;span style=&quot;text-wrap-mode: nowrap;&quot;&gt;&lt;b&gt;RefreshToken&lt;/b&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="28" width="106" x="270" y="-914" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

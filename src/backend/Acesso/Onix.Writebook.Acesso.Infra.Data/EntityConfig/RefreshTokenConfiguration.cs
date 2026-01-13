@@ -12,7 +12,7 @@ namespace Onix.Writebook.Acesso.Infra.Data.EntityConfig
 
             builder.Property(c => c.Token)
                 .IsRequired()
-                .HasMaxLength(32);
+                .HasMaxLength(64); // Base64 de 32 bytes = 44 caracteres, com margem de segurança
 
             builder.HasIndex(c => c.Token)
                 .IsUnique();

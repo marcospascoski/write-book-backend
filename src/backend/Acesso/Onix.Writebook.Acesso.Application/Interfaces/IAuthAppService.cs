@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Onix.Writebook.Acesso.Application.ViewModels;
 using Onix.Writebook.Acesso.Application.ViewModels.Login;
@@ -9,6 +10,9 @@ namespace Onix.Writebook.Acesso.Application.Interfaces
     {
         Task<UsuarioViewModel> Login(LoginViewModel loginViewModel);
         Task Logout(string accessToken);
+        Task<UsuarioViewModel> RefreshToken(string refreshToken);
+        Task RevokeRefreshToken(string refreshToken);
+        Task RevokeAllRefreshTokens(Guid usuarioId);
     }
 
     

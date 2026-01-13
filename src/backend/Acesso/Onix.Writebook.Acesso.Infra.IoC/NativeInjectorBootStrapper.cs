@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Onix.Writebook.Acesso.Application.Interfaces;
@@ -21,6 +22,9 @@ namespace Onix.Writebook.Acesso.Infra.IoC
         }
         public static void AddConfiguration(IServiceCollection services)
         {
+            // HTTP Context
+            services.AddHttpContextAccessor();
+
             // Application
             services.AddScoped<IUsuarioAppService, UsuarioAppService>();
             services.AddScoped<IPerfilAppService, PerfilAppService>();
@@ -28,6 +32,7 @@ namespace Onix.Writebook.Acesso.Infra.IoC
             services.AddScoped<IPerfilPermissaoAppService, PerfilPermissaoAppService>();
             services.AddScoped<IAuthAppService, AuthAppService>();
             services.AddScoped<ITokenBlacklistService, TokenBlacklistService>();
+            services.AddScoped<IHttpClientInfoService, HttpClientInfoService>();
             
             // Domain
             services.AddScoped<IUsuarioValidator, UsuarioValidator>();

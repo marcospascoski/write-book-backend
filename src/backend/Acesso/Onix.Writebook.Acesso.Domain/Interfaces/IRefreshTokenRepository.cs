@@ -11,5 +11,6 @@ namespace Onix.Writebook.Acesso.Domain.Interfaces
         Task<RefreshToken> PesquisarPorTokenAsync(string token);
         Task RevogarTokensUsuarioAsync(Guid usuarioId);
         Task<int> ContarTokensAtivosUsuarioAsync(Guid usuarioId);
+        Task<bool> JaCadastrado(Guid usuarioId, Guid id);
     }
 }

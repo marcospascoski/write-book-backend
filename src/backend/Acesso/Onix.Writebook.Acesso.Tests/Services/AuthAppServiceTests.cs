@@ -17,12 +17,14 @@ namespace Onix.Writebook.Acesso.Tests.Services
         INotificationContext notificationContext,
         IAuthAppService authAppService,
         IUsuarioRepository usuarioRepository,
+        IRefreshTokenRepository refreshTokenRepository,
         IUsuarioAppService usuarioAppService,
         IAcessosUnitOfWork acessosUnitOfWork)
     {
         private readonly INotificationContext _notificationContext = notificationContext;
         private readonly IAuthAppService _authAppService = authAppService;
         private readonly IUsuarioRepository _usuarioRepository = usuarioRepository;
+        private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
         private readonly IUsuarioAppService _usuarioAppService = usuarioAppService;
         private readonly IAcessosUnitOfWork _acessosUnitOfWork = acessosUnitOfWork;
 
@@ -194,6 +196,127 @@ namespace Onix.Writebook.Acesso.Tests.Services
             // Assert
             Assert.NotNull(loginResult);
             Assert.False(_notificationContext.HasErrors);
+        }
+
+        #endregion
+
+        #region RefreshToken Tests
+
+        [Fact]
+        public async Task Login_deve_gerar_refresh_token()
+        {
+            // Arrange
+            var senha = "senha123";
+            var email = "usuario.refreshtoken@test.com";
+            var usuarioRegistrado = await CriarUsuario(email, senha);
+            _acessosUnitOfWork.Untrack<Usuario>(usuarioRegistrado);
+
+            var loginViewModel = new LoginViewModel
+            {
+                Email = email,
+                Senha = senha
+            };
+
+            // Act
+            var result = await _authAppService.Login(loginViewModel);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.RefreshToken);
+            Assert.NotEmpty(result.RefreshToken);
+        }
+
+        [Fact]
+        public async Task Login_deve_revogar_tokens_anteriores()
+        {
+            // Arrange
+            var senha = "senha123";
+            var email = "usuario.revogar@test.com";
+            var usuarioRegistrado = await CriarUsuario(email, senha);
+            _acessosUnitOfWork.Untrack<Usuario>(usuarioRegistrado);
+
+            var loginViewModel = new LoginViewModel
+            {
+                Email = email,
+                Senha = senha
+            };
+
+            // Primeiro login
+            var primeiroLogin = await _authAppService.Login(loginViewModel);
+            var primeiroRefreshToken = primeiroLogin.RefreshToken;
+
+            // Limpar contexto
+            _acessosUnitOfWork.Untrack<Usuario>(usuarioRegistrado);
+
+            // Segundo login
+            var segundoLogin = await _authAppService.Login(loginViewModel);
+            var segundoRefreshToken = segundoLogin.RefreshToken;
+
+            // Assert
+            Assert.NotNull(segundoRefreshToken);
+            Assert.NotEqual(primeiroRefreshToken, segundoRefreshToken);
+
+            // Verificar que tokens antigos foram revogados
+            var tokensAtivos = await _refreshTokenRepository.ContarTokensAtivosUsuarioAsync(usuarioRegistrado.Id);
+            Assert.Equal(1, tokensAtivos); // Apenas o novo token deve estar ativo
+        }
+
+        [Fact]
+        public async Task Login_deve_criar_refresh_token_com_dados_corretos()
+        {
+            // Arrange
+            var senha = "senha123";
+            var email = "usuario.tokenvalido@test.com";
+            var usuarioRegistrado = await CriarUsuario(email, senha);
+            var usuarioId = usuarioRegistrado.Id;
+            _acessosUnitOfWork.Untrack<Usuario>(usuarioRegistrado);
+
+            var loginViewModel = new LoginViewModel
+            {
+                Email = email,
+                Senha = senha
+            };
+
+            // Act
+            var result = await _authAppService.Login(loginViewModel);
+
+            // Assert
+            Assert.NotNull(result.RefreshToken);
+
+            // Buscar o token criado
+            var tokenCriado = await _refreshTokenRepository.PesquisarPorTokenAsync(result.RefreshToken);
+
+            Assert.NotNull(tokenCriado);
+            Assert.Equal(usuarioId, tokenCriado.UsuarioId);
+            Assert.False(tokenCriado.Revogado);
+            Assert.True(tokenCriado.EstaValido());
+            Assert.NotNull(tokenCriado.IPAddress);
+            Assert.NotNull(tokenCriado.UserAgent);
+        }
+
+        [Fact]
+        public async Task Refresh_token_deve_expirar_apos_30_dias()
+        {
+            // Arrange
+            var senha = "senha123";
+            var email = "usuario.expiracao@test.com";
+            var usuarioRegistrado = await CriarUsuario(email, senha);
+            _acessosUnitOfWork.Untrack<Usuario>(usuarioRegistrado);
+
+            var loginViewModel = new LoginViewModel
+            {
+                Email = email,
+                Senha = senha
+            };
+
+            // Act
+            var result = await _authAppService.Login(loginViewModel);
+
+            // Assert
+            var tokenCriado = await _refreshTokenRepository.PesquisarPorTokenAsync(result.RefreshToken);
+
+            var diasExpiracao = (tokenCriado.DataExpiracao - DateTime.UtcNow).TotalDays;
+            Assert.True(diasExpiracao >= 29 && diasExpiracao <= 30);
         }
 
         #endregion

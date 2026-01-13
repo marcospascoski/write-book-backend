@@ -26,6 +26,8 @@ namespace Onix.Writebook.Acesso.Application.AutoMapper
             CreateMap<PermissaoViewModel, Permissao>();
 
             CreateMap<PerfilPermissaoViewModel, PerfilPermissao>();
+
+            CreateMap<RefreshTokenViewModel, RefreshToken>();
         }
     }
 }
