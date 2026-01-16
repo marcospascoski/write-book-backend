@@ -1,0 +1,6 @@
+# Linux/Mac/WSL
+chmod +x instalador.sh
+./instalador.sh
+
+# Windows (Git Bash)
+bash instalador.sh
