@@ -1,0 +1,21 @@
+gerar a imagem docker
+docker build -f src/backend/WebApi/Onix.Writebook.WebApi/Dockerfile -t writebook-api:latest .
+
+
+Solução 1: Build sem cache (Mais rápido)
+docker build --no-cache -f src/backend/WebApi/Onix.Writebook.WebApi/Dockerfile -t writebook-api:latest .
+
+Solução 2: Limpar cache do Docker (Recomendado)
+# Limpar apenas o cache de build
+docker builder prune -f
+
+# Depois fazer o build normal
+docker build -f src/backend/WebApi/Onix.Writebook.WebApi/Dockerfile -t writebook-api:latest .
+
+
+Solução 3: Limpeza completa (Se as anteriores não funcionarem)
+# Limpar tudo (imagens, containers, volumes, redes não usadas)
+docker system prune -a -f
+
+# Rebuild
+docker build -f src/backend/WebApi/Onix.Writebook.WebApi/Dockerfile -t writebook-api:latest .
