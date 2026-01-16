@@ -12,7 +12,7 @@ using Onix.Writebook.Acesso.Infra.Data.Context;
 namespace Onix.Writebook.Acesso.Infra.Data.Migrations
 {
     [DbContext(typeof(AcessosDbContext))]
-    [Migration("20260110032738_CreateAcesso")]
+    [Migration("20260116063504_CreateAcesso")]
     partial class CreateAcesso
     {
         /// <inheritdoc />
@@ -86,6 +86,90 @@ namespace Onix.Writebook.Acesso.Infra.Data.Migrations
                     b.ToTable("Permissao", (string)null);
                 });
 
+            modelBuilder.Entity("Onix.Writebook.Acesso.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataExpiracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DataRevogacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IPAddress")
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)");
+
+                    b.Property<bool>("Revogado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("RefreshToken", (string)null);
+                });
+
+            modelBuilder.Entity("Onix.Writebook.Acesso.Domain.Entities.TokenRedefinicaoSenha", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DataExpiracao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DataUtilizacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Utilizado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("TokenRedefinicaoSenha", (string)null);
+                });
+
             modelBuilder.Entity("Onix.Writebook.Acesso.Domain.Entities.Usuario", b =>
                 {
                     b.Property<Guid>("Id")
@@ -108,6 +192,9 @@ namespace Onix.Writebook.Acesso.Infra.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<long>("PerfilId")
+                        .HasColumnType("bigint");
+
                     b.Property<short>("Status")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("smallint")
@@ -117,6 +204,8 @@ namespace Onix.Writebook.Acesso.Infra.Data.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("PerfilId");
 
                     b.ToTable("Usuario", (string)null);
                 });
@@ -140,8 +229,36 @@ namespace Onix.Writebook.Acesso.Infra.Data.Migrations
                     b.Navigation("Permissao");
                 });
 
+            modelBuilder.Entity("Onix.Writebook.Acesso.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Onix.Writebook.Acesso.Domain.Entities.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("Onix.Writebook.Acesso.Domain.Entities.TokenRedefinicaoSenha", b =>
+                {
+                    b.HasOne("Onix.Writebook.Acesso.Domain.Entities.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("Onix.Writebook.Acesso.Domain.Entities.Usuario", b =>
                 {
+                    b.HasOne("Onix.Writebook.Acesso.Domain.Entities.Perfil", "Perfil")
+                        .WithMany()
+                        .HasForeignKey("PerfilId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("Onix.Writebook.Acesso.Domain.ValueObjects.SaltValueObject", "Salt", b1 =>
                         {
                             b1.Property<Guid>("UsuarioId")
@@ -179,6 +296,8 @@ namespace Onix.Writebook.Acesso.Infra.Data.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("UsuarioId");
                         });
+
+                    b.Navigation("Perfil");
 
                     b.Navigation("Salt");
 

@@ -108,16 +108,26 @@ namespace Onix.Writebook.Acesso.Infra.Data.Migrations.Data
         #region Usuario
         private static string[] GetColunasTabelaUsuario()
         {
-            return new[] { "Id", "PerfilId", "Nome", "EnderecoCarteira", "Status" };
+            return new[] { "Id", "PerfilId", "Nome", "Email", "Senha", "Salt", "Status", "CreatedAt", "Modificado" };
         }
 
         public static readonly Guid AdminUserId = new("d4c45e5b-4364-4cd9-9f7b-c68a3ae3a7e8");
         private static List<object[]> UsuarioData => new()
         {
-            new object[] { AdminUserId, 1, "Marcos", "0x68aa7c921Cf0dec4F30488C65218995225FD09F5", 1 },
+            new object[] 
+            { 
+                AdminUserId, 
+                1, 
+                "Admin", 
+                "admin@test.com",
+                "24b5349e59344464c8c7f3eb54eb5b1db6f588caba71bb1946804a9937a07bf1", // Hash para senha '123456'
+                "c40f8cfc8d451a9a853760d1d5f63d08", // Salt
+                1, 
+                new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) // Modificado
+            },
             // Clientes para testes
-            //new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 2, "Cliente 1", "0x1111111111111111111111111111111111111111", 1 },
-            //new object[] { new Guid("22222222-2222-2222-2222-222222222222"), 2, "Cliente 2", "0x2222222222222222222222222222222222222222", 1 },
+            //new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 2, "Cliente 1", "cliente1@teste.com", "hash...", "salt...", 1, DateTime.UtcNow },
         };
         #endregion Usuario
     }
