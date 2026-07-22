@@ -1,12 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Onix.Writebook.Books.Application\Onix.Writebook.Books.Application.csproj" />
     <ProjectReference Include="..\Onix.Writebook.Books.Infra.Data\Onix.Writebook.Books.Infra.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Ensure Npgsql EF Core stays on a net9-compatible version for projects that reference data/IoC layers -->
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
   </ItemGroup>
 
 </Project>

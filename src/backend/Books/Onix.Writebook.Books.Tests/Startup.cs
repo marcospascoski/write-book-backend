@@ -22,16 +22,14 @@ namespace Onix.Writebook.Books.Tests
             // Books registrations (Repositories, Services, Validators)
             Onix.Writebook.Books.Infra.IoC.NativeInjectorBootStrapper.AddConfiguration(services);
 
+            // Register AutoMapper profiles used by the Books project so IMapper is available in tests
+            services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
+
             // Isolated InMemory database per test run to avoid cross-test contamination
             services.AddDbContext<BooksDbContext>(options =>
                 options.UseInMemoryDatabase($"BooksTests_{Guid.NewGuid()}")
             );
 
-            // AutoMapper profiles
-            services.AddAutoMapper(
-                typeof(DomainToViewModelMappingProfile).Assembly,
-                typeof(ViewModelToDomainMappingProfile).Assembly
-            );
         }
     }
 }

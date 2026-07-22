@@ -1,0 +1,5 @@
+# Ignore local framework folder from GitHub commits
+/Onix.Framework/
+
+# Ignore Visual Studio workspace
+.vs/

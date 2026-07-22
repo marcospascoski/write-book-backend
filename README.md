@@ -32,7 +32,7 @@ link: https://github.com/marcospascoski/Onix.Framework
 
 ## 🏗️ Arquitetura
 
-- **.NET 8** - Framework principal
+- **.NET 9** - Framework principal
 - **PostgreSQL 16** - Banco de dados
 - **Entity Framework Core** - ORM
 - **JWT** - Autenticação
@@ -234,7 +234,7 @@ dotnet run
 
 ## 🔗 Links Úteis
 
-- [Documentação .NET 8](https://docs.microsoft.com/dotnet)
+- [Documentação .NET 9](https://docs.microsoft.com/dotnet)
 - [Entity Framework Core](https://docs.microsoft.com/ef/core)
 - [Docker](https://docs.docker.com)
 - [PostgreSQL](https://www.postgresql.org/docs)

@@ -52,7 +52,7 @@ namespace Onix.Writebook.WebApi.Config
             // Adicionar configuração de autenticação JWT
             services.AddJwtConfiguration();
             // AutoMapper
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
             return services;
         }
 

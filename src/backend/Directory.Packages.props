@@ -1,0 +1,6 @@
+<Project>
+  <ItemGroup>
+	<!-- Centralize Npgsql EF Core package to a net9-compatible version -->
+	<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.18" />
+  </ItemGroup>
+</Project>

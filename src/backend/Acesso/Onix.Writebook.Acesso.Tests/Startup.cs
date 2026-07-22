@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Onix.Writebook.Acesso.Infra.Data.Context;
 using AutoMapper;
-using Onix.Writebook.Acesso.Application.AutoMapper;
 using System; // added for Guid
 
 namespace Onix.Writebook.Acesso.Tests
@@ -18,16 +17,14 @@ namespace Onix.Writebook.Acesso.Tests
             // Acesso registrations (Repositories, Services, Validators)
             Onix.Writebook.Acesso.Infra.IoC.NativeInjectorBootStrapper.AddConfiguration(services);
 
+            // Register AutoMapper profiles used by the Acesso project so IMapper is available in tests
+            services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
+
             // Use isolated InMemory database per test run to avoid cross-test contamination
             services.AddDbContext<AcessosDbContext>(options =>
                 options.UseInMemoryDatabase($"AcessoTests_{Guid.NewGuid()}")
             );
-
-            // AutoMapper profiles - include both domain->vm and vm->domain mappings
-            services.AddAutoMapper(
-                typeof(DomainToViewModelMappingProfile).Assembly,
-                typeof(ViewModelToDomainMappingProfile).Assembly
-            );
+            
         }
     }
 }

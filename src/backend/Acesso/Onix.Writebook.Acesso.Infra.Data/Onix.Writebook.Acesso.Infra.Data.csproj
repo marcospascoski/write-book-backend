@@ -1,16 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+	<TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
+	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
 		<PrivateAssets>all</PrivateAssets>
 		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
   </ItemGroup>	
   <ItemGroup>
-    <ProjectReference Include="..\Onix.Writebook.Acesso.Domain\Onix.Writebook.Acesso.Domain.csproj" />
-    <ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.Infra.Data.EFCore\Onix.Framework.Infra.Data.EFCore.csproj" />
+	<ProjectReference Include="..\Onix.Writebook.Acesso.Domain\Onix.Writebook.Acesso.Domain.csproj" />
+	<ProjectReference Include="..\..\..\..\Onix.Framework\src\Onix.Framework.Infra.Data.EFCore\Onix.Framework.Infra.Data.EFCore.csproj" />
   </ItemGroup>
 </Project>
+
